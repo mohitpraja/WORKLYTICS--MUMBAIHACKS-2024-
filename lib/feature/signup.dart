@@ -129,7 +129,11 @@ class _SignUpState extends State<SignUp> {
             gradient: LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-                colors: [Color(0xfffbb448), Color(0xfff7892b)])),
+                colors: [
+                  Colors.deepPurpleAccent,
+                  Colors.deepPurple,
+                ]
+            )),
         child: Text(
           'Register Now',
           style: TextStyle(fontSize: 20, color: Colors.white),

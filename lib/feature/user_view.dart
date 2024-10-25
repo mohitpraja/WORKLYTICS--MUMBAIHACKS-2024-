@@ -18,6 +18,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/core/globals.dart';
 
+import 'login.dart';
+
 class UserView extends StatefulWidget {
   const UserView({super.key});
 
@@ -86,9 +88,16 @@ class _UserViewState extends State<UserView> {
                     prefs.clear();
                   },
                   child: Center(
-                    child: Icon(
-                      CupertinoIcons.power,
-                      color: white,
+                    child: InkWell(
+                      onTap: (){
+                          Navigator.push(
+                              context, MaterialPageRoute(builder: (context) => LoginPage()));
+                        },
+
+                      child: Icon(
+                        CupertinoIcons.power,
+                        color: white,
+                      ),
                     ),
                   )),
             ],
