@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/bezierContainer.dart';
 import 'package:worklytics/core/my_colors.dart';
 import 'package:worklytics/feature/signup.dart';
@@ -26,6 +26,8 @@ class _LoginPageState extends State<LoginPage> {
 
   bool showError=true;
   bool hasBeenPress = true;
+  bool show =false;
+
 
   @override
   void initState(){
@@ -38,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-  /*void initPlatformState() async{
+  void initPlatformState() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String isLoggedIn = prefs.getString("loggedIn")??"no" ;
     if(isLoggedIn=="yes"){
@@ -49,7 +51,6 @@ class _LoginPageState extends State<LoginPage> {
     }
 
   }
-  */bool show =false;
 
 
 
