@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/globals.dart';
+import 'package:worklytics/feature/add_employee.dart';
 
 class AdminView extends StatefulWidget {
   const AdminView({super.key});
@@ -17,11 +18,15 @@ class _AdminViewState extends State<AdminView> {
 
   // Function to add a new employee
   void _addEmployee() {
-    setState(() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>  AddEmployeePage()),
+    );
+
+    /*  setState(() {
       employees.add("New Employee ${employees.length + 1}");
     });
-  }
-  @override
+  */}
   @override
   void initState() {
     // TODO: implement initState
@@ -47,7 +52,7 @@ class _AdminViewState extends State<AdminView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Employee Directory"),
+        title: Text('Worklytics'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
