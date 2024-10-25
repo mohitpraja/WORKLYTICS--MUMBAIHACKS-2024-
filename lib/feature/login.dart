@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/NewConn.dart';
 import 'package:worklytics/core/bezierContainer.dart';
@@ -28,16 +29,13 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController =  TextEditingController();
   TextEditingController passwordController =  TextEditingController();
 
-  bool showError=true;
-  bool hasBeenPress = true;
-  bool show =false;
 
 
   @override
   void initState(){
     // CheckConn().check();
 
-    // initPlatformState();
+    initPlatformState();
     print('Welcome to Log in page');
     super.initState();
 
@@ -47,11 +45,22 @@ class _LoginPageState extends State<LoginPage> {
   void initPlatformState() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String isLoggedIn = prefs.getString("loggedIn")??"no" ;
+    String isAdmin = prefs.getString("isAdmin")??"no" ;
+
     if(isLoggedIn=="yes"){
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => const Home()),
-      // );
+      if(isAdmin=='yes'){
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AdminView()),
+        );
+
+      }else{
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const UserView()),
+        );
+
+      }
     }
 
   }
@@ -145,10 +154,14 @@ class _LoginPageState extends State<LoginPage> {
                     prefs.setString("email", doc["email"]);
                     //
                     if(doc["owner"]=='yes'){
+                      prefs.setString("isAdmin",'yes') ;
+
                       Navigator.pushReplacement(
                           context, MaterialPageRoute(builder: (context) => AdminView()));
 
                     }else{
+                      prefs.setString("isAdmin",'no') ;
+
                       Navigator.pushReplacement(
                           context, MaterialPageRoute(builder: (context) => UserView()));
 
@@ -278,19 +291,24 @@ class _LoginPageState extends State<LoginPage> {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-          text: 'P',
+          text: 'W',
+          style: GoogleFonts.portLligatSans(
+            textStyle: Theme.of(context).textTheme.headlineMedium,
+            fontSize: 30,
+            fontWeight: FontWeight.w700,
+            color: primaryColor,
+          ),  children: [
+        TextSpan(
+          text: 'ork',
           style: TextStyle(color: Colors.black, fontSize: 30),
-          children: [
-            TextSpan(
-              text: 'ro',
-              style: TextStyle(color: Colors.black, fontSize: 30),
-            ),
-            TextSpan(
-              text: 'ject',
-              style: TextStyle(   color: primaryColor,
-                  fontSize: 30),
-            ),
-          ]),
+        ),
+        TextSpan(
+          text: 'lytics',
+          style: TextStyle(
+              color: primaryColor,
+              fontSize: 30),
+        ),
+      ]),
     );
   }
 
