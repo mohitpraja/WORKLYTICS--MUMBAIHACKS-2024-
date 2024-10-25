@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/colors.dart';
+import 'package:worklytics/core/globals.dart';
+
+import 'EmployeeList.dart';
+import 'add_employee.dart';
 
 class AdminView extends StatefulWidget {
   const AdminView({super.key});
@@ -13,12 +18,14 @@ class _AdminViewState extends State<AdminView> {
   List<String> employees = ["All Attendances", "All emoplyees"];
 
   // Function to add a new employee
+
   void _addEmployee() {
-    setState(() {
-      employees.add("New Employee ${employees.length + 1}");
-    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>  AddEmployeePage()),
+    );
+
   }
-  @override
   @override
   void initState() {
     // TODO: implement initState
@@ -38,9 +45,8 @@ class _AdminViewState extends State<AdminView> {
       userEmail = a;
       nameLogin = b;
     });
-   }
+  }
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -58,11 +64,11 @@ class _AdminViewState extends State<AdminView> {
               ),
               color: white,
               shadowColor: Colors.black54,
-              child: const Padding(
+              child:  Padding(
                 padding: EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    CircleAvatar(
+                    const  CircleAvatar(
                       radius: 30,
                       child: Icon(
                         Icons.person,
@@ -91,7 +97,16 @@ class _AdminViewState extends State<AdminView> {
               child: ListView.builder(
                 itemCount: employees.length,
                 itemBuilder: (context, index) {
-                  return Card(
+                  return  InkWell(
+                      onTap: (){
+                    print(index);
+                    if(index==1){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) =>  EmployeeList()),
+                      );
+                    }
+                  },child:Card(
                     elevation: 3.5,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
@@ -103,7 +118,23 @@ class _AdminViewState extends State<AdminView> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(12),
-                          child: Text(employees[index]),
+                          child: InkWell(
+                              onTap: (){
+                                print(index);
+                    if(index==1){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) =>  EmployeeList()),
+                      );
+                    }
+                    },
+
+                              child: Text(employees[index],
+
+
+                          )
+
+                          ),
                         ),
                         const IconButton(
                             onPressed: null,
@@ -113,7 +144,7 @@ class _AdminViewState extends State<AdminView> {
                             ))
                       ],
                     ),
-                  );
+                  ));
                 },
               ),
             ),

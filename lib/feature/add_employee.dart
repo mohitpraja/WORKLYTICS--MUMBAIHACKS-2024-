@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:worklytics/core/constant.dart';
 import 'package:worklytics/core/globals.dart';
 
-class AddEmployeePage extends StatelessWidget {
+class AddEmployeePage extends StatefulWidget {
+  @override
+  State<AddEmployeePage> createState() => _AddEmployeePageState();
+}
+
+class _AddEmployeePageState extends State<AddEmployeePage> {
   final TextEditingController nameController = TextEditingController();
+
   final TextEditingController phoneController = TextEditingController();
+
   final TextEditingController designationController = TextEditingController();
 
   @override
@@ -45,7 +52,7 @@ class AddEmployeePage extends StatelessWidget {
             SizedBox(height: 24.0),
             Center(
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   // Add employee data handling logic here
                   String name = nameController.text;
                   String addPhone = phoneController.text;
@@ -60,13 +67,17 @@ class AddEmployeePage extends StatelessWidget {
                   nameController.clear();
                   phoneController.clear();
                   designationController.clear();
+                  setState(() {
 
-                  MyConstant().addEmp.add({
-                    "nameLogin": nameController.text,
-                    "designation": designationController.text,
-                    "phone": phoneController.text,
+                  });
+
+                await  MyConstant().addEmp.add({
+                    "nameLogin": name,
+                    "designation": designation,
+                    "phone": addPhone,
                     "ownerId": phone,
                     "owner": 'no',
+                    "isWorking": 'no',
                   });
 
 

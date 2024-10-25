@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState(){
-    // CheckConn().check();
+    CheckConn().check();
 
     initPlatformState();
     print('Welcome to Log in page');
