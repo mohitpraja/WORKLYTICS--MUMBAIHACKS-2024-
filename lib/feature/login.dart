@@ -2,9 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/bezierContainer.dart';
 import 'package:worklytics/core/my_colors.dart';
+import 'package:worklytics/feature/signup.dart';
 import 'home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -20,8 +21,8 @@ class _LoginPageState extends State<LoginPage> {
 
 
 
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
+  TextEditingController emailController =  TextEditingController();
+  TextEditingController passwordController =  TextEditingController();
 
   bool showError=true;
   bool hasBeenPress = true;
@@ -30,15 +31,14 @@ class _LoginPageState extends State<LoginPage> {
   void initState(){
     // CheckConn().check();
 
-    initPlatformState();
+    // initPlatformState();
     print('Welcome to Log in page');
-    // fetchMovies();
     super.initState();
 
   }
 
 
-  void initPlatformState() async{
+  /*void initPlatformState() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String isLoggedIn = prefs.getString("loggedIn")??"no" ;
     if(isLoggedIn=="yes"){
@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
     }
 
   }
-  bool show =false;
+  */bool show =false;
 
 
 
@@ -225,12 +225,7 @@ class _LoginPageState extends State<LoginPage> {
 
 
   Widget _createAccountLabel() {
-    return InkWell(
-      onTap: () {
-        // Navigator.push(
-        //     context, MaterialPageRoute(builder: (context) => SignUpPage()));
-      },
-      child: Container(
+    return  Container(
         margin: EdgeInsets.symmetric(vertical: 20),
         padding: EdgeInsets.all(15),
         alignment: Alignment.bottomCenter,
@@ -244,17 +239,22 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               width: 10,
             ),
-            Text(
+      InkWell(
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => SignUp()));
+        },
+        child: Text(
               'Register',
               style: TextStyle(
-                  color: Color(0xfff79c4f),
+                  color: Palette().appColorTimeINMaster,
                   fontSize: 13,
                   fontWeight: FontWeight.w600),
-            ),
+            )),
           ],
         ),
-      ),
-    );
+      );
+
   }
 
   Widget _title() {
@@ -262,12 +262,7 @@ class _LoginPageState extends State<LoginPage> {
       textAlign: TextAlign.center,
       text: TextSpan(
           text: 'P',
-         /* style: GoogleFonts.portLligatSans(
-            textStyle: Theme.of(context).textTheme.headlineMedium,
-            fontSize: 30,
-            fontWeight: FontWeight.w700,
-            color: Palette().appColorTimeINMaster,
-          ),*/
+          style: TextStyle(color: Colors.black, fontSize: 30),
           children: [
             TextSpan(
               text: 'ro',
@@ -316,13 +311,7 @@ class _LoginPageState extends State<LoginPage> {
                       _emailPasswordWidget(),
                       SizedBox(height: 20),
                       // _submitButton(),
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        alignment: Alignment.centerRight,
-                        child: Text('Forgot Password ?',
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w500)),
-                      ),
+
                       _divider(),
                       // _facebookButton(),
                       SizedBox(height: height * .055),
