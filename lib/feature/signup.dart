@@ -3,6 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/bezierContainer.dart';
 import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/core/constant.dart';
+import 'package:worklytics/feature/user_view.dart';
+import 'admin_view.dart';
 import 'login.dart';
 
 
@@ -15,11 +17,12 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
-  TextEditingController nameController = new TextEditingController();
-  TextEditingController phoneController = new TextEditingController();
+  TextEditingController emailController =  TextEditingController();
+  TextEditingController passwordController =  TextEditingController();
+  TextEditingController nameController =  TextEditingController();
+  TextEditingController phoneController =  TextEditingController();
 
+  @override
   void initState() {
     print('Welcome to sign up page');
     super.initState();
@@ -83,7 +86,7 @@ class _SignUpState extends State<SignUp> {
     return InkWell(
       onTap: () async {
         show();
-        String e = emailController.text;
+        String e = emailController.text.toLowerCase();
         String p = passwordController.text;
         String n = nameController.text;
         String h = phoneController.text;
@@ -91,22 +94,23 @@ class _SignUpState extends State<SignUp> {
         try {
           MyConstant().SignUpAlfa.add({
             "nameLogin": nameController.text,
-            "email": emailController.text,
+            "email": emailController.text.toLowerCase(),
             "phone": phoneController.text,
             "password": passwordController.text,
+            "owner": 'yes',
           });
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setInt('phone',int.parse(h));
+          prefs.setInt('phone',int.parse(h.toString()));
           prefs.setString("nameLogin",n);
           prefs.setString("password",p );
           prefs.setString("email", e );
           prefs.setString('loggedIn', 'yes');
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //       builder: (context) =>
-          //           Home()), //SIGN DIRECT PAGE
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    AdminView()), //SIGN DIRECT PAGE
+          );
         } catch (e) {
           print(e);
         }

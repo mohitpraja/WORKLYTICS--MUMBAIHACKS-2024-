@@ -1,8 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:worklytics/core/NewConn.dart';
 import 'package:worklytics/core/bezierContainer.dart';
 import 'package:worklytics/core/colors.dart';
+import 'package:worklytics/core/constant.dart';
+import 'package:worklytics/core/showDialogue.dart';
+import 'package:worklytics/feature/admin_view.dart';
 import 'package:worklytics/feature/signup.dart';
+import 'package:worklytics/feature/user_view.dart';
 // import 'home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -97,21 +104,21 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
- /* Widget _submitButton() {
+  Widget _submitButton() {
     log("show submkit error");
 
     return InkWell(
       onTap: ()async{
         int  lemail = emailController.text.length;
         int  lpass = passwordController.text.length;
-        String e =emailController.text;
+        String e =emailController.text.toLowerCase();
         String p =passwordController.text;
         if(lemail>1 && lpass>1) {
-          var check = await checkConnection();
+          bool check = await CheckConn().check();
           if (check == true) {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             try {
-              var _documentRef = SignUpAlfa.where("email",isEqualTo: emailController.text);
+              var _documentRef = MyConstant().SignUpAlfa.where("email",isEqualTo: emailController.text.toLowerCase());
 
               print("i m email id ${emailController.text}");
               print("shoyiguwafuyjsgsjhgfv");
@@ -127,20 +134,29 @@ class _LoginPageState extends State<LoginPage> {
               }else{
                 userFromFirebase.docs.forEach((doc) async {
                   print("i m passwordController id ${passwordController.text}");
+                  print("i m passwordController id--- ${doc["password"]}");
 
                   // print(doc["registerPhone"]);
-                  if (doc["password"] == passwordController.text) {
+                  if (doc["password"]== passwordController.text) {
                     prefs.setString("loggedIn",'yes') ;
                     prefs.setInt('phone', int.parse(doc["phone"].toString()));
                     prefs.setString("nameLogin", doc["nameLogin"]);
                     prefs.setString("password", doc["password"]);
                     prefs.setString("email", doc["email"]);
-                    // _showNotification(doc["name"]);
-                    Navigator.pushReplacement(
-                        context, MaterialPageRoute(builder: (context) => Home()));
+                    //
+                    if(doc["owner"]=='yes'){
+                      Navigator.pushReplacement(
+                          context, MaterialPageRoute(builder: (context) => AdminView()));
+
+                    }else{
+                      Navigator.pushReplacement(
+                          context, MaterialPageRoute(builder: (context) => UserView()));
+
+                    }
+
                   } else {
                     prefs.clear();
-                    DialogBuilder(context).showResultDialog('Invalid Credentials 1221!');
+                    DialogBuilder(context).showResultDialog('Invalid Credentials!');
                     await Future.delayed(const Duration(seconds: 2));
                   }
                 });
@@ -150,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
               log(e.toString());
               ///empty database
               prefs.clear();
-              DialogBuilder(context).showResultDialog('Invalid Credentials!');
+              DialogBuilder(context).showResultDialog('Something went wrong\n please try after sometime');
               // DialogBuilder(context).showResultDialog('Invalid Credentials963!');
               await Future.delayed(const Duration(seconds: 2));
             }
@@ -176,10 +192,14 @@ class _LoginPageState extends State<LoginPage> {
                   blurRadius: 5,
                   spreadRadius: 2)
             ],
-            gradient: LinearGradient(
+            gradient: const  LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-                colors: [Color(0xfffbb448), Color(0xfff7892b)])),
+                colors: [
+                  Colors.deepPurpleAccent,
+                  Colors.deepPurple,
+                ]
+            )),
         child: Text(
           'Login',
           style: TextStyle(fontSize: 20, color: Colors.white),
@@ -187,7 +207,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-*/
   Widget _divider() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
@@ -309,7 +328,7 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: 50),
                       _emailPasswordWidget(),
                       SizedBox(height: 20),
-                      // _submitButton(),
+                      _submitButton(),
 
                       _divider(),
                       // _facebookButton(),
