@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:worklytics/core/colors.dart';
 
 class AdminView extends StatefulWidget {
   const AdminView({super.key});
@@ -9,7 +10,7 @@ class AdminView extends StatefulWidget {
 
 class _AdminViewState extends State<AdminView> {
   // List to store employee names (you could add more fields as needed)
-  List<String> employees = ["John Doe", "Jane Smith", "Emily Johnson"];
+  List<String> employees = ["All Attendances", "All emoplyees"];
 
   // Function to add a new employee
   void _addEmployee() {
@@ -22,27 +23,30 @@ class _AdminViewState extends State<AdminView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Employee Directory"),
+        title: const Text("Dashoboard"),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Profile Card
             Card(
-              elevation: 4,
+              elevation: 3.5,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
+              color: white,
+              shadowColor: Colors.black54,
+              child: const Padding(
+                padding: EdgeInsets.all(16.0),
                 child: Row(
                   children: [
                     CircleAvatar(
                       radius: 30,
-                      backgroundImage: NetworkImage(
-                          'https://www.example.com/profile_image.png'), // Placeholder image URL
+                      child: Icon(
+                        Icons.person,
+                        size: 30,
+                      ), // Placeholder image URL
                     ),
                     SizedBox(width: 16),
                     Column(
@@ -53,32 +57,43 @@ class _AdminViewState extends State<AdminView> {
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        Text("Software Developer"),
+                        Text("Manager"),
                       ],
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 10),
             // Employee List Container
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: ListView.builder(
-                  itemCount: employees.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: CircleAvatar(
-                        child: Text(employees[index][0]),
-                      ),
-                      title: Text(employees[index]),
-                    );
-                  },
-                ),
+              child: ListView.builder(
+                itemCount: employees.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    elevation: 3.5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    color: white,
+                    shadowColor: Colors.black54,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Text(employees[index]),
+                        ),
+                        const IconButton(
+                            onPressed: null,
+                            icon: Icon(
+                              Icons.arrow_forward_ios,
+                              size: 15,
+                            ))
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -87,8 +102,7 @@ class _AdminViewState extends State<AdminView> {
       // Floating Action Button for Adding Employee
       floatingActionButton: FloatingActionButton(
         onPressed: _addEmployee,
-        child: Icon(Icons.add),
-        tooltip: "Add Employee",
+        child: Icon(Icons.add_task,color: primaryColor,),
       ),
     );
   }

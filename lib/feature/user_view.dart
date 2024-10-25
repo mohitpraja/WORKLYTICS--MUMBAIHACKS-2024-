@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
@@ -19,6 +20,7 @@ import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/core/fonts.dart';
 import 'package:worklytics/core/globals.dart';
 import 'package:worklytics/core/regula.dart';
+import 'package:worklytics/feature/admin_view.dart';
 
 import 'login.dart';
 
@@ -75,9 +77,12 @@ class _UserViewState extends State<UserView> {
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             backgroundColor: primaryColor,
-            title: Text(
-              "Worklytics",
-              style: TextStyle(color: white),
+            title: GestureDetector(
+              onTap: () =>  Get.to(()=> const AdminView()),
+              child: Text(
+                "Worklytics",
+                style: TextStyle(color: white),
+              ),
             ),
             actions: <Widget>[
               IconButton(
@@ -331,8 +336,6 @@ class _UserViewState extends State<UserView> {
       getWebLocation();
     } else {
       try {
-        log('get _getAddressFromLatLng');
-
         List<Placemark> placemarks =
             await placemarkFromCoordinates(latitude, longitude);
         Placemark place = placemarks[0];
