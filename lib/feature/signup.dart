@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/bezierContainer.dart';
+import 'package:worklytics/core/constant.dart';
 import 'package:worklytics/core/my_colors.dart';
 
 import 'home.dart';
@@ -90,7 +91,7 @@ class _SignUpState extends State<SignUp> {
         String h = phoneController.text;
 
         try {
-          SignUpAlfa.add({
+          MyConstant().SignUpAlfa.add({
             "nameLogin": nameController.text,
             "email": emailController.text,
             "phone": phoneController.text,
