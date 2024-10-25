@@ -78,7 +78,7 @@ class _UserViewState extends State<UserView> {
           appBar: AppBar(
             backgroundColor: primaryColor,
             title: GestureDetector(
-              onTap: () =>  Get.to(()=> const AdminView()),
+              onTap: () => Get.to(() => const AdminView()),
               child: Text(
                 "Worklytics",
                 style: TextStyle(color: white),
@@ -191,6 +191,13 @@ class _UserViewState extends State<UserView> {
                   ),
                 ),
               ],
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: null,
+            child: Icon(
+              Icons.add_task,
+              color: primaryColor,
             ),
           ),
         ));

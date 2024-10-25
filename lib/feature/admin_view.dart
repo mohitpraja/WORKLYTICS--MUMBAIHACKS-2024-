@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/colors.dart';
-import 'package:worklytics/core/globals.dart';
-
-import 'EmployeeList.dart';
-import 'add_employee.dart';
 
 class AdminView extends StatefulWidget {
   const AdminView({super.key});
@@ -15,7 +10,7 @@ class AdminView extends StatefulWidget {
 
 class _AdminViewState extends State<AdminView> {
   // List to store employee names (you could add more fields as needed)
-  List<String> employees = ["All Attendances", "All emoplyees"];
+  List<String> employees = ["All Attendances", "All emoplyees","All Tasks"];
 
   // Function to add a new employee
 
@@ -45,8 +40,9 @@ class _AdminViewState extends State<AdminView> {
       userEmail = a;
       nameLogin = b;
     });
-  }
+   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -64,11 +60,11 @@ class _AdminViewState extends State<AdminView> {
               ),
               color: white,
               shadowColor: Colors.black54,
-              child:  Padding(
+              child: const Padding(
                 padding: EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    const  CircleAvatar(
+                    CircleAvatar(
                       radius: 30,
                       child: Icon(
                         Icons.person,
@@ -118,23 +114,7 @@ class _AdminViewState extends State<AdminView> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(12),
-                          child: InkWell(
-                              onTap: (){
-                                print(index);
-                    if(index==1){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) =>  EmployeeList()),
-                      );
-                    }
-                    },
-
-                              child: Text(employees[index],
-
-
-                          )
-
-                          ),
+                          child: Text(employees[index]),
                         ),
                         const IconButton(
                             onPressed: null,
@@ -144,7 +124,7 @@ class _AdminViewState extends State<AdminView> {
                             ))
                       ],
                     ),
-                  ));
+                  );
                 },
               ),
             ),
