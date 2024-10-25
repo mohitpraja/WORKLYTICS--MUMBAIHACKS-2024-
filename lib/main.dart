@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/feature/splash.dart';
+import 'package:worklytics/feature/user_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +20,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
         useMaterial3: true,
       ),
-      home: const SplashView(),
+      home: const UserView(),
+      //home: const SplashView(),
     );
   }
 }
