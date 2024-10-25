@@ -103,12 +103,12 @@ class _SignUpState extends State<SignUp> {
           prefs.setString("password",p );
           prefs.setString("email", e );
           prefs.setString('loggedIn', 'yes');
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    Home()), //SIGN DIRECT PAGE
-          );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //       builder: (context) =>
+          //           Home()), //SIGN DIRECT PAGE
+          // );
         } catch (e) {
           print(e);
         }
