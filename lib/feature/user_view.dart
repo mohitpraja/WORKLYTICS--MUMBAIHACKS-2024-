@@ -16,6 +16,7 @@ import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/colors.dart';
+import 'package:worklytics/core/fonts.dart';
 import 'package:worklytics/core/globals.dart';
 
 class UserView extends StatefulWidget {
@@ -79,71 +80,60 @@ class _UserViewState extends State<UserView> {
               style: TextStyle(color: white),
             ),
             actions: <Widget>[
-              GestureDetector(
-                  onTap: () async {
+              IconButton(
+                  onPressed: () async {
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     prefs.clear();
                   },
-                  child: Center(
-                    child: Icon(
-                      CupertinoIcons.power,
-                      color: white,
-                    ),
+                  icon: Icon(
+                    CupertinoIcons.power,
+                    color: white,
                   )),
             ],
           ),
-          body: SingleChildScrollView(
+          body: Padding(
+            padding: const EdgeInsets.all(15),
             child: Column(
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Stack(children: const [
-                      CircleAvatar(
-                        radius: 35,
-                        child: Icon(
-                          Icons.person,
-                          size: 50,
-                        ),
-                      )
-                    ]),
-                  ],
+                const SizedBox(
+                  height: 30,
+                ),
+                const CircleAvatar(
+                  radius: 45,
+                  child: Icon(
+                    Icons.person,
+                    size: 45,
+                  ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            // primary: appColorTimeINMaster,
-                            textStyle: const TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.bold)),
-                        onPressed: () async {
-                          _getCurrentLocation();
-                          setState(() {
-                            clickMeLoad = true;
-                          });
-                        },
-                        child: clickMeLoad == false
-                            ? const Text(
-                                "Click Me",
-                                style: TextStyle(color: Colors.white),
-                              )
-                            : Center(
-                                child: CircularProgressIndicator(
-                                color: white,
-                              ))),
-                  ],
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(10),
+                MaterialButton(
+                    onPressed: () async {
+                      _getCurrentLocation();
+                      setState(() {
+                        clickMeLoad = true;
+                      });
+                    },
+                    color: primaryColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                    child: clickMeLoad == false
+                        ? const Text(
+                            "Click Me",
+                            style: TextStyle(color: Colors.white),
+                          )
+                        : Center(
+                            child: CircularProgressIndicator(
+                            color: white,
+                          ))),
+                const SizedBox(
+                  height: 15,
                 ),
                 Container(
-                  width: 350,
-                  height: 120,
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.white70,
                       borderRadius: BorderRadius.circular(15),
@@ -154,21 +144,18 @@ class _UserViewState extends State<UserView> {
                     children: <Widget>[
                       const Padding(padding: EdgeInsets.only(top: 20)),
                       locLoad
-                          ? const CircularProgressIndicator(
-                              color: Colors.black,
-                            )
+                          ? const CircularProgressIndicator()
                           : Text(
                               'You are at: '.toUpperCase() +
                                   _currentAddress.toUpperCase(),
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.visible,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                                color: Colors.black,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14.5,
+                                fontFamily: FF.alata,
+                                color: Colors.black54,
                               )),
-                      // Text('Fake Location: $_isMockLocation'),
-                      // Text(' $_latitude , $_longitude'),
                       TextButton.icon(
                         onPressed: () {
                           setState(() {
