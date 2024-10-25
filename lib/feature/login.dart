@@ -1,10 +1,7 @@
-import 'dart:developer';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/bezierContainer.dart';
-import 'package:worklytics/core/my_colors.dart';
+import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/feature/signup.dart';
 // import 'home.dart';
 
@@ -248,7 +245,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Text(
               'Register',
               style: TextStyle(
-                  color: Palette().appColorTimeINMaster,
+                  color: primaryColor,
                   fontSize: 13,
                   fontWeight: FontWeight.w600),
             )),
@@ -271,7 +268,8 @@ class _LoginPageState extends State<LoginPage> {
             ),
             TextSpan(
               text: 'ject',
-              style: TextStyle(color: Palette().appColorTimeINMaster, fontSize: 30),
+              style: TextStyle(   color: primaryColor,
+                  fontSize: 30),
             ),
           ]),
     );

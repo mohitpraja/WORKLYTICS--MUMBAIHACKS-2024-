@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/bezierContainer.dart';
+import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/core/constant.dart';
-import 'package:worklytics/core/my_colors.dart';
-
-// import 'home.dart';
 import 'login.dart';
 
 
@@ -131,7 +129,11 @@ class _SignUpState extends State<SignUp> {
             gradient: LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-                colors: [Color(0xfffbb448), Color(0xfff7892b)])),
+                colors: [
+                  Colors.deepPurpleAccent,
+                  Colors.deepPurple,
+                ]
+            )),
         child: Text(
           'Register Now',
           style: TextStyle(fontSize: 20, color: Colors.white),
@@ -186,7 +188,9 @@ class _SignUpState extends State<SignUp> {
             ),
             TextSpan(
               text: 'ject',
-              style: TextStyle(color: Palette().appColorTimeINMaster, fontSize: 30),
+              style: TextStyle(
+                  color: primaryColor,
+                   fontSize: 30),
             ),
           ]),
     );

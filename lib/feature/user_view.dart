@@ -19,6 +19,8 @@ import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/core/fonts.dart';
 import 'package:worklytics/core/globals.dart';
 
+import 'login.dart';
+
 class UserView extends StatefulWidget {
   const UserView({super.key});
 
@@ -82,6 +84,9 @@ class _UserViewState extends State<UserView> {
             actions: <Widget>[
               IconButton(
                   onPressed: () async {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LoginPage()));
+
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
                     prefs.clear();
