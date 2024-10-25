@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/colors.dart';
+import 'package:worklytics/core/globals.dart';
+
+import 'EmployeeList.dart';
+import 'add_employee.dart';
 
 class AdminView extends StatefulWidget {
   const AdminView({super.key});
@@ -60,7 +65,7 @@ class _AdminViewState extends State<AdminView> {
               ),
               color: white,
               shadowColor: Colors.black54,
-              child: const Padding(
+              child:  Padding(
                 padding: EdgeInsets.all(16.0),
                 child: Row(
                   children: [
@@ -124,7 +129,7 @@ class _AdminViewState extends State<AdminView> {
                             ))
                       ],
                     ),
-                  );
+                  ));
                 },
               ),
             ),
