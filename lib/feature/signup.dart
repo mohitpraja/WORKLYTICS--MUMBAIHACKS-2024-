@@ -4,7 +4,7 @@ import 'package:worklytics/core/bezierContainer.dart';
 import 'package:worklytics/core/constant.dart';
 import 'package:worklytics/core/my_colors.dart';
 
-import 'home.dart';
+// import 'home.dart';
 import 'login.dart';
 
 
