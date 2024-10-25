@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/core/fonts.dart';
 import 'package:worklytics/core/globals.dart';
+import 'package:worklytics/core/regula.dart';
 
 import 'login.dart';
 
@@ -46,7 +47,6 @@ class _UserViewState extends State<UserView> {
   @override
   void initState() {
     initPlatformState();
-
     super.initState();
   }
 
@@ -55,8 +55,6 @@ class _UserViewState extends State<UserView> {
   }
 
   void initPlatformState() async {
-    remarkController.clear();
-
     requestLocationPermission();
     setState(() {
       clickMeLoad = false;
@@ -116,10 +114,17 @@ class _UserViewState extends State<UserView> {
                 ),
                 MaterialButton(
                     onPressed: () async {
-                      _getCurrentLocation();
                       setState(() {
                         clickMeLoad = true;
                       });
+                      _getCurrentLocation();
+                      await openCamera().then(
+                        (value) {
+                          setState(() {
+                            clickMeLoad = false;
+                          });
+                        },
+                      );
                     },
                     color: primaryColor,
                     shape: RoundedRectangleBorder(
@@ -129,10 +134,13 @@ class _UserViewState extends State<UserView> {
                             "Click Me",
                             style: TextStyle(color: Colors.white),
                           )
-                        : Center(
+                        : SizedBox(
+                            width: 20,
+                            height: 20,
                             child: CircularProgressIndicator(
-                            color: white,
-                          ))),
+                              color: white,
+                            ),
+                          )),
                 const SizedBox(
                   height: 15,
                 ),
@@ -183,10 +191,9 @@ class _UserViewState extends State<UserView> {
         ));
   }
 
-  Future getImage() async {
-    XFile? image34;
-    image34 = await ImagePicker()
-        .pickImage(source: ImageSource.camera, imageQuality: 100);
+  Future openCamera() async {
+    File? image34;
+    image34 = await RegulaFaceRecognition.openCamera();
     FirebaseStorage fs = FirebaseStorage.instance;
     Reference rootReference = fs.ref();
     Reference pictureFolderRef = rootReference
@@ -350,88 +357,6 @@ class _UserViewState extends State<UserView> {
   void stopLocationUpdates() {
     _locationSubscription?.cancel();
     _locationSubscription = null;
-  }
-
-  Future remarkPop(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: const Text('Select an option'),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    RadioListTile(
-                      title: const Text('Day'),
-                      value: 'Day',
-                      groupValue: deliveryOption,
-                      onChanged: (value) {
-                        setState(() {
-                          deliveryOption = value.toString();
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: const Text('Night'),
-                      value: 'Night',
-                      groupValue: deliveryOption,
-                      onChanged: (value) {
-                        setState(() {
-                          deliveryOption = value.toString();
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: const Text('Extra'),
-                      value: 'Extra',
-                      groupValue: deliveryOption,
-                      onChanged: (value) {
-                        setState(() {
-                          deliveryOption = value.toString();
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: remarkController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter text here',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  child: const Text('Cancel'),
-                  onPressed: () async {
-                    // Handle submit action here
-                    setState(() {
-                      clickMeLoad = false;
-                    });
-
-                    Navigator.of(context).pop();
-                    // await getImage();
-                  },
-                ),
-                TextButton(
-                  child: const Text('Submit'),
-                  onPressed: () async {
-                    // Handle submit action here
-                    Navigator.of(context).pop();
-                    await getImage();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
   }
 
   Future noInternetPop() {
