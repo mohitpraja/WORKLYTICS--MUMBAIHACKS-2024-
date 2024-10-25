@@ -18,6 +18,27 @@ class _AdminViewState extends State<AdminView> {
       employees.add("New Employee ${employees.length + 1}");
     });
   }
+  @override
+  @override
+  void initState() {
+    // TODO: implement initState
+    initPlatformState();
+    super.initState();
+  }
+  void initPlatformState() async {
+    print(DateTime.now().timeZoneName);
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String a = prefs.getString('email') ?? '';
+    String? b = prefs.getString('nameLogin');
+    phone = prefs.getInt('phone');
+    password = prefs.getString('password');
+    phone = prefs.getInt('phone');
+    setState(() {
+      userEmail = a;
+      nameLogin = b;
+    });
+   }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +74,7 @@ class _AdminViewState extends State<AdminView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "John Doe",
+                          nameLogin.toString(),
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),

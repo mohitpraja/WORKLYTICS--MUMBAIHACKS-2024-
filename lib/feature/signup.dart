@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/bezierContainer.dart';
 import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/core/constant.dart';
-import 'package:worklytics/feature/user_view.dart';
+
 import 'admin_view.dart';
 import 'login.dart';
 
@@ -105,6 +106,8 @@ class _SignUpState extends State<SignUp> {
           prefs.setString("password",p );
           prefs.setString("email", e );
           prefs.setString('loggedIn', 'yes');
+          prefs.setString("isAdmin",'yes') ;
+
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -156,7 +159,7 @@ class _SignUpState extends State<SignUp> {
         margin: EdgeInsets.symmetric(vertical: 20),
         padding: EdgeInsets.all(15),
         alignment: Alignment.bottomCenter,
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
@@ -183,15 +186,19 @@ class _SignUpState extends State<SignUp> {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-          text: 'P',
-          style: TextStyle(color: Colors.black, fontSize: 30),
-          children: [
+          text: 'W',
+          style: GoogleFonts.portLligatSans(
+            textStyle: Theme.of(context).textTheme.headlineMedium,
+            fontSize: 30,
+            fontWeight: FontWeight.w700,
+            color: primaryColor,
+          ),  children: [
             TextSpan(
-              text: 'ro',
+              text: 'ork',
               style: TextStyle(color: Colors.black, fontSize: 30),
             ),
             TextSpan(
-              text: 'ject',
+              text: 'lytics',
               style: TextStyle(
                   color: primaryColor,
                    fontSize: 30),
