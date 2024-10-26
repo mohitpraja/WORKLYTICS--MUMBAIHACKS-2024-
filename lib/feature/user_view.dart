@@ -84,11 +84,10 @@ class UserViewState extends State<UserView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: primaryColor,
-          automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false,
         title: GestureDetector(
           onTap: () => Get.to(() => const AdminView()),
           child: Text(
@@ -102,8 +101,7 @@ class UserViewState extends State<UserView> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => LoginPage()));
 
-                SharedPreferences prefs =
-                    await SharedPreferences.getInstance();
+                SharedPreferences prefs = await SharedPreferences.getInstance();
                 prefs.clear();
               },
               icon: Icon(
@@ -132,13 +130,13 @@ class UserViewState extends State<UserView> {
             MaterialButton(
                 onPressed: () async {
                   _getCurrentLocation();
-                  if(action=='Already Mark'){
+                  if (action == 'Already Mark') {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: const Text(
-                          'Attendance Already Mark!!',
-                          style: TextStyle(color: Colors.white),
-                        )));
-                   return;
+                      'Attendance Already Mark!!',
+                      style: TextStyle(color: Colors.white),
+                    )));
+                    return;
                   }
                   setState(() {
                     clickMeLoad = true;
@@ -156,8 +154,8 @@ class UserViewState extends State<UserView> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5)),
                 child: clickMeLoad == false
-                    ?  Text(
-                  action.toString(),
+                    ? Text(
+                        action.toString(),
                         style: TextStyle(color: Colors.white),
                       )
                     : SizedBox(
@@ -205,18 +203,17 @@ class UserViewState extends State<UserView> {
                     label: const Text(
                       'Refresh Location',
                     ),
-                    icon: const Icon(Icons.refresh_rounded,
-                        color: Colors.black),
+                    icon:
+                        const Icon(Icons.refresh_rounded, color: Colors.black),
                   )
                 ],
               ),
             ),
-           ],
+          ],
         ),
       ),
-     );
+    );
   }
-
 
   Future<bool> checkPermissionOfLocation() async {
     loc.Location location = loc.Location();
@@ -337,7 +334,8 @@ class UserViewState extends State<UserView> {
                     "Time Outside Geofence: ${_outsideDuration.inMinutes} minutes");
               });
             }
-            var _documentRef = MyConstant().addEmp.where("email", isEqualTo: userEmail);
+            var _documentRef =
+                MyConstant().addEmp.where("email", isEqualTo: userEmail);
 
             try {
               // Get the query snapshot
@@ -348,9 +346,10 @@ class UserViewState extends State<UserView> {
                 // Loop through each document and access data
                 userFromFirebase.docs.forEach((doc) {
                   var data = doc.id;
-                  MyConstant().addEmp.doc(doc.id).update({
-                    'geofenceSts':geofenceStatus
-                  });
+                  MyConstant()
+                      .addEmp
+                      .doc(doc.id)
+                      .update({'geofenceSts': geofenceStatus});
                   print("User Data: ${data}");
                 });
               } else {
@@ -359,7 +358,6 @@ class UserViewState extends State<UserView> {
             } catch (e) {
               print("Error retrieving user: $e");
             }
-
 
             // Optionally fetch the address
             _getAddressFromLatLng(latitude, longitude);
@@ -399,7 +397,6 @@ class UserViewState extends State<UserView> {
     _locationSubscription?.cancel();
     _locationSubscription = null;
   }
-
 
   Future noInternetPop() {
     return showDialog(
@@ -442,6 +439,7 @@ class UserViewState extends State<UserView> {
       locLoad = false;
     });
   }
+
   Future openCamera() async {
     File? image34;
     image34 = await RegulaFaceRecognition.openCamera();
@@ -452,6 +450,9 @@ class UserViewState extends State<UserView> {
         .child(formattedDate)
         .child(DateTime.now().toString());
     // Reference pictureFolderRef = rootReference.child("pictures").child("image");
+    if (image34 == null) {
+      return;
+    }
     pictureFolderRef
         .putFile(File(image34!.path))
         .whenComplete(() {})
@@ -460,26 +461,26 @@ class UserViewState extends State<UserView> {
       String link = await storageTask.ref.getDownloadURL();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text(
-            'Attendance Mark Successfully!!',
-            style: TextStyle(color: Colors.white),
-          )));
+        'Attendance Mark Successfully!!',
+        style: TextStyle(color: Colors.white),
+      )));
       String setAction = '0';
-      if(action=='TimeIn'){
+      if (action == 'TimeIn') {
         action = 'TimeOut';
-        setAction= '1';
-      }else if(action =='TimeOut'){
+        setAction = '1';
+      } else if (action == 'TimeOut') {
         action = 'Already Mark';
-        setAction= '2';
-
-      }else{
-        setAction= '2';
+        setAction = '2';
+      } else {
+        setAction = '2';
 
         action = 'Already Mark';
       }
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("action",setAction)??"0" ;
+      prefs.setString("action", setAction) ?? "0";
       // Define the query
-      var _documentRef = MyConstant().addEmp.where("email", isEqualTo: userEmail);
+      var _documentRef =
+          MyConstant().addEmp.where("email", isEqualTo: userEmail);
 
       try {
         // Get the query snapshot
@@ -491,8 +492,8 @@ class UserViewState extends State<UserView> {
           userFromFirebase.docs.forEach((doc) {
             var data = doc.id;
             MyConstant().addEmp.doc(doc.id).update({
-              'action':setAction,
-              'isWorking':setAction=='1'?'yes':'no',
+              'action': setAction,
+              'isWorking': setAction == '1' ? 'yes' : 'no',
             });
             print("User Data: ${data}");
           });
@@ -502,8 +503,6 @@ class UserViewState extends State<UserView> {
       } catch (e) {
         print("Error retrieving user: $e");
       }
-
-
     });
     // todo --- You have to hit your Api Over Here
   }

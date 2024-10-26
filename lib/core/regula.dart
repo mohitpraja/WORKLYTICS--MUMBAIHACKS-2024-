@@ -22,6 +22,7 @@ class RegulaFaceRecognition {
   }
 
   static Future<File?> openCamera() async {
+    await initialize();
     log("open camera cld");
     File? imgPath;
     await faceSDK.startFaceCapture().then((result) async {
