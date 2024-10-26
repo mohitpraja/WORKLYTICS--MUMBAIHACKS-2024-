@@ -18,7 +18,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/core/fonts.dart';
 import 'package:worklytics/core/globals.dart';
-import 'package:worklytics/core/regula.dart';
 
 import 'login.dart';
 
@@ -36,6 +35,14 @@ class _UserViewState extends State<UserView> {
   StreamSubscription<loc.LocationData>? _locationSubscription;
   final loc.Location locationPoint = loc.Location();
 
+  final double geofenceLatitude =
+      19.0708066; // Replace with your geofence center latitude
+  final double geofenceLongitude =
+      72.8760758; // Replace with your geofence center longitude
+  final double geofenceRadius = 5.0; //
+  bool isWithinGeofence = false; // Track if inside geofence
+  String geofenceStatus = "Outside Geofence";
+
   String _currentAddress = '';
   late String img64;
   bool showError = true;
@@ -47,6 +54,7 @@ class _UserViewState extends State<UserView> {
   @override
   void initState() {
     initPlatformState();
+
     super.initState();
   }
 
@@ -55,6 +63,8 @@ class _UserViewState extends State<UserView> {
   }
 
   void initPlatformState() async {
+    remarkController.clear();
+
     requestLocationPermission();
     setState(() {
       clickMeLoad = false;
@@ -114,17 +124,10 @@ class _UserViewState extends State<UserView> {
                 ),
                 MaterialButton(
                     onPressed: () async {
+                      _getCurrentLocation();
                       setState(() {
                         clickMeLoad = true;
                       });
-                      _getCurrentLocation();
-                      await openCamera().then(
-                        (value) {
-                          setState(() {
-                            clickMeLoad = false;
-                          });
-                        },
-                      );
                     },
                     color: primaryColor,
                     shape: RoundedRectangleBorder(
@@ -134,13 +137,10 @@ class _UserViewState extends State<UserView> {
                             "Click Me",
                             style: TextStyle(color: Colors.white),
                           )
-                        : SizedBox(
-                            width: 20,
-                            height: 20,
+                        : Center(
                             child: CircularProgressIndicator(
-                              color: white,
-                            ),
-                          )),
+                            color: white,
+                          ))),
                 const SizedBox(
                   height: 15,
                 ),
@@ -185,15 +185,58 @@ class _UserViewState extends State<UserView> {
                     ],
                   ),
                 ),
+
+                Text(
+                  geofenceStatus,
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: isWithinGeofence ? Colors.green : Colors.red,
+                  ),
+                ),
+
+                // ignore: avoid_unnecessary_containers
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      color: Colors.white70,
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(
+                        color: Colors.black12,
+                      )),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '${_outsideDuration.inMinutes} minutes',
+                        style: const TextStyle(
+                          fontSize: 24,
+                          color: Colors.red,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        '${_insideDuration.inMinutes} minutes',
+                        style: const TextStyle(
+                          fontSize: 24,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
         ));
   }
 
-  Future openCamera() async {
-    File? image34;
-    image34 = await RegulaFaceRecognition.openCamera();
+  Future getImage() async {
+    XFile? image34;
+    image34 = await ImagePicker()
+        .pickImage(source: ImageSource.camera, imageQuality: 100);
     FirebaseStorage fs = FirebaseStorage.instance;
     Reference rootReference = fs.ref();
     Reference pictureFolderRef = rootReference
@@ -278,6 +321,11 @@ class _UserViewState extends State<UserView> {
     return sts;
   }
 
+  DateTime? _enterTime; // Time when entering geofence
+  DateTime? _exitTime; // Time when exiting geofence
+  Duration _insideDuration = Duration.zero; // Accumulated inside time
+  Duration _outsideDuration = Duration.zero; // Accumulated outside time
+
   Future<void> _getCurrentLocation() async {
     if (kIsWeb) {
       getWebLocation();
@@ -296,32 +344,73 @@ class _UserViewState extends State<UserView> {
         locationSettings = AppleSettings(
           accuracy: LocationAccuracy.high,
           activityType: ActivityType.fitness,
-          distanceFilter: 100,
+          distanceFilter: 10,
           pauseLocationUpdatesAutomatically: true,
           showBackgroundLocationIndicator: false,
         );
       } else {
         locationSettings = const LocationSettings(
-          accuracy: LocationAccuracy.low,
+          accuracy: LocationAccuracy.medium,
           distanceFilter: 10,
         );
       }
 
-      // If the listener is already active, do not start a new one
+      // Check if listener is active
       if (_locationSubscription == null) {
         await locationPoint.getLocation();
 
-        _locationSubscription = locationPoint.onLocationChanged.listen(
-          (loc.LocationData currentLocation) {
-            log('get _getCurrentLocation');
-            final latitude = currentLocation.latitude;
-            final longitude = currentLocation.longitude;
+        _locationSubscription = locationPoint.onLocationChanged
+            .listen((loc.LocationData currentLocation) {
+          log('get _getCurrentLocation');
+          final latitude = currentLocation.latitude;
+          final longitude = currentLocation.longitude;
 
-            if (latitude != null && longitude != null) {
-              _getAddressFromLatLng(latitude, longitude);
+          if (latitude != null && longitude != null) {
+            double distanceInMeters = Geolocator.distanceBetween(
+              latitude,
+              longitude,
+              geofenceLatitude,
+              geofenceLongitude,
+            );
+
+            bool isInside = distanceInMeters <= geofenceRadius;
+
+            // Update timings only if geofence status changes
+            if (isInside != isWithinGeofence) {
+              setState(() {
+                isWithinGeofence = isInside;
+                geofenceStatus =
+                    isInside ? "Inside Geofence" : "Outside Geofence";
+
+                if (isInside) {
+                  // Entered geofence: record entry time and calculate outside duration
+                  _enterTime = DateTime.now();
+                  if (_exitTime != null) {
+                    _outsideDuration += _enterTime!.difference(_exitTime!);
+                    _exitTime = null;
+                  }
+                } else {
+                  // Exited geofence: record exit time and calculate inside duration
+                  _exitTime = DateTime.now();
+                  if (_enterTime != null) {
+                    _insideDuration += _exitTime!.difference(_enterTime!);
+                    _enterTime = null;
+                  }
+                }
+
+                print("Time Inside Geofence: ${distanceInMeters} meeter");
+                print("Time Inside Geofence: ${geofenceRadius} radius");
+                print(
+                    "Time Inside Geofence: ${_insideDuration.inMinutes} minutes");
+                print(
+                    "Time Outside Geofence: ${_outsideDuration.inMinutes} minutes");
+              });
             }
-          },
-        );
+
+            // Optionally fetch the address
+            _getAddressFromLatLng(latitude, longitude);
+          }
+        });
       }
     }
   }
@@ -357,6 +446,88 @@ class _UserViewState extends State<UserView> {
   void stopLocationUpdates() {
     _locationSubscription?.cancel();
     _locationSubscription = null;
+  }
+
+  Future remarkPop(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Select an option'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    RadioListTile(
+                      title: const Text('Day'),
+                      value: 'Day',
+                      groupValue: deliveryOption,
+                      onChanged: (value) {
+                        setState(() {
+                          deliveryOption = value.toString();
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: const Text('Night'),
+                      value: 'Night',
+                      groupValue: deliveryOption,
+                      onChanged: (value) {
+                        setState(() {
+                          deliveryOption = value.toString();
+                        });
+                      },
+                    ),
+                    RadioListTile(
+                      title: const Text('Extra'),
+                      value: 'Extra',
+                      groupValue: deliveryOption,
+                      onChanged: (value) {
+                        setState(() {
+                          deliveryOption = value.toString();
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: remarkController,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter text here',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  child: const Text('Cancel'),
+                  onPressed: () async {
+                    // Handle submit action here
+                    setState(() {
+                      clickMeLoad = false;
+                    });
+
+                    Navigator.of(context).pop();
+                    // await getImage();
+                  },
+                ),
+                TextButton(
+                  child: const Text('Submit'),
+                  onPressed: () async {
+                    // Handle submit action here
+                    Navigator.of(context).pop();
+                    await getImage();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   Future noInternetPop() {

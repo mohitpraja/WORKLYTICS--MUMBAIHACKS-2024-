@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:worklytics/core/colors.dart';
+import 'package:worklytics/feature/geofence.dart';
 import 'package:worklytics/feature/splash.dart';
 import 'package:worklytics/feature/user_view.dart';
 
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
         useMaterial3: true,
       ),
-      home: const UserView(),
+      home:  UserView(),
+      // home:  GeoFenceScreen(),
       //home: const SplashView(),
     );
   }
