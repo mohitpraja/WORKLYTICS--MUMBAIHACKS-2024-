@@ -43,7 +43,7 @@ class UserViewState extends State<UserView> {
       19.0708066; // Replace with your geofence center latitude
   final double geofenceLongitude =
       72.8760758; // Replace with your geofence center longitude
-  final double geofenceRadius = 5.0; //
+  final double geofenceRadius = 5000.0; //
   bool isWithinGeofence = false; // Track if inside geofence
   String geofenceStatus = "Outside Geofence";
 
@@ -57,6 +57,7 @@ class UserViewState extends State<UserView> {
 
   @override
   void initState() {
+    _getCurrentLocation();
     initPlatformState();
 
     super.initState();
@@ -67,8 +68,16 @@ class UserViewState extends State<UserView> {
   }
 
   void initPlatformState() async {
-    remarkController.clear();
-
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String a = prefs.getString('email') ?? '';
+    String? b = prefs.getString('nameLogin');
+    phone = prefs.getInt('phone');
+    password = prefs.getString('password');
+    phone = prefs.getInt('phone');
+    setState(() {
+      userEmail = a;
+      nameLogin = b;
+    });
     requestLocationPermission();
     setState(() {
       clickMeLoad = false;
@@ -195,7 +204,30 @@ class UserViewState extends State<UserView> {
                             color: Colors.black54,
                           )),
                   TextButton.icon(
-                    onPressed: () {
+                    onPressed: () async{
+                      var _documentRef =
+                      MyConstant().addEmp.where("email", isEqualTo: userEmail);
+
+                      try {
+                        // Get the query snapshot
+                        var userFromFirebase = await _documentRef.get();
+
+                        // Check if there are any documents matching the query
+                        if (userFromFirebase.docs.isNotEmpty) {
+                          // Loop through each document and access data
+                          userFromFirebase.docs.forEach((doc) {
+                            var data = doc.id;
+                            MyConstant().addEmp.doc(doc.id).update({
+                              'isWorking':  'yes',
+                            });
+                            print("User Data: ${data}");
+                          });
+                        } else {
+                          print("No user found with the specified email.");
+                        }
+                      } catch (e) {
+                        print("Error retrieving user: $e");
+                      }
                       setState(() {
                         locLoad = true;
                       });
@@ -494,7 +526,7 @@ class UserViewState extends State<UserView> {
             var data = doc.id;
             MyConstant().addEmp.doc(doc.id).update({
               'action': setAction,
-              'isWorking': setAction == '1' ? 'yes' : 'no',
+              'isWorking':  'yes',
             });
             print("User Data: ${data}");
           });

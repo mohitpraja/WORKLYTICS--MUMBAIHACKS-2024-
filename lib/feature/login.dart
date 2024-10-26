@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,7 +8,6 @@ import 'package:worklytics/core/bezierContainer.dart';
 import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/core/constant.dart';
 import 'package:worklytics/core/globals.dart';
-import 'package:worklytics/core/showDialogue.dart';
 import 'package:worklytics/feature/admin_view.dart';
 import 'package:worklytics/feature/signup.dart';
 import 'package:worklytics/feature/user_view.dart';
@@ -107,7 +107,9 @@ class _LoginPageState extends State<LoginPage> {
               var userFromFirebase = await _documentRef.get();
               if (userFromFirebase.docs.length == 0) {
                 prefs.clear();
-                DialogBuilder(context).showResultDialog('Invalid Credentials!');
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: const Text('Invalid Credentials!'),
+                ));
                 await Future.delayed(const Duration(seconds: 2));
               } else {
                 userFromFirebase.docs.forEach((doc) async {
@@ -137,8 +139,9 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   } else {
                     prefs.clear();
-                    DialogBuilder(context)
-                        .showResultDialog('Invalid Credentials!');
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: const Text('Invalid Credentials!'),
+                    ));
                     await Future.delayed(const Duration(seconds: 2));
                   }
                 });
@@ -148,8 +151,10 @@ class _LoginPageState extends State<LoginPage> {
 
               ///empty database
               prefs.clear();
-              DialogBuilder(context).showResultDialog(
-                  'Something went wrong\n please try after sometime');
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: const Text('Something went wrong\n please try after sometime'),
+              ));
+              // DialogBuilder(context).showResultDialog('Something went wrong\n please try after sometime');
               // DialogBuilder(context).showResultDialog('Invalid Credentials963!');
               await Future.delayed(const Duration(seconds: 2));
             }

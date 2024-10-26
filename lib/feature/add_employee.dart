@@ -85,14 +85,16 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
                   });
 
                 await  MyConstant().addEmp.add({
-                    "nameLogin": name,
+                  "email": emailController.text.toLowerCase(),
+
+                  "nameLogin": name,
                     "designation": designation,
                     "phone": addPhone,
                     "password": 'abcd1234',
                     "ownerId": phone,
                     "owner": 'no',
                     "isWorking": 'no',
-                    "geofenceSts": 'within',
+                    "geofenceSts": 'Not fetched',
                     "action": '0',
                   });
                   await MyConstant().SignUpAlfa.add({
@@ -103,7 +105,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
                     "ownerId": phone,
                     "owner": 'no',
                     "isWorking": 'no',
-                    "geofenceSts": 'within',
+                    "geofenceSts": 'Not fetched',
                     "action": '0',
 
                   });
