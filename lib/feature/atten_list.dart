@@ -67,9 +67,30 @@ class AttenListState extends State<AttenList> {
                   ),
 
                   title: Text(employee['nameLogin'] ?? "No Name"),
-                  subtitle: Text(employee['geofenceSts'] ?? "Not fetched",style: TextStyle(
-                    color: employee['geofenceSts'].isNotEmpty && employee['geofenceSts'].contains('Inside') ? Colors.green: Colors.red
-                  ),),
+                  subtitle: Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            employee['geofenceSts'] ?? "Not fetched",
+                            style: TextStyle(
+                              color: (employee['geofenceSts'] != null &&
+                                  employee['geofenceSts']!.contains('Inside'))
+                                  ? Colors.green
+                                  : Colors.red,
+                            ),
+                          ),
+                          const SizedBox(height: 8), // Optional space between text fields
+                          Text('Suspected Time: '+''+
+                            employee['geofenceTime'] ?? "Not fetched", // Replace with the desired second text
+                            style: TextStyle(fontSize: 14, color: Colors.red), // Customize as needed
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
+                ,
                 );
               },
             );

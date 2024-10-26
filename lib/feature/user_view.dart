@@ -92,134 +92,138 @@ class UserViewState extends State<UserView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: primaryColor,
-        automaticallyImplyLeading: false,
-        title: GestureDetector(
-          onTap: () => Get.to(() => const AdminView()),
-          child: Text(
-            "Worklytics",
-            style: TextStyle(color: white),
+    return PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {},
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: primaryColor,
+          automaticallyImplyLeading: false,
+          title: GestureDetector(
+            onTap: () => Get.to(() => const AdminView()),
+            child: Text(
+              "Worklytics",
+              style: TextStyle(color: white),
+            ),
           ),
-        ),
-        actions: <Widget>[
-          IconButton(
-              onPressed: () async {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LoginPage()));
-
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                prefs.clear();
-              },
-              icon: Icon(
-                CupertinoIcons.power,
-                color: white,
-              )),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 30,
-            ),
-            const CircleAvatar(
-              radius: 45,
-              child: Icon(
-                Icons.person,
-                size: 45,
-              ),
-            ),
-            Text(nameLogin??''),
-            const SizedBox(
-              height: 15,
-            ),
-            MaterialButton(
+          actions: <Widget>[
+            IconButton(
                 onPressed: () async {
-                  _getCurrentLocation();
-                  if (action == 'Already Mark') {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: const Text(
-                      'Attendance Already Mark!!',
-                      style: TextStyle(color: Colors.white),
-                    )));
-                    return;
-                  }
-                  setState(() {
-                    clickMeLoad = true;
-                  });
-
-                  await openCamera().then(
-                    (value) {
-                      setState(() {
-                        clickMeLoad = false;
-                      });
-                    },
-                  );
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LoginPage()));
+      
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  prefs.clear();
                 },
-                color: primaryColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)),
-                child: clickMeLoad == false
-                    ? Text(
-                        action.toString(),
-                        style: TextStyle(color: Colors.white),
-                      )
-                    : SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          color: white,
-                        ),
-                      )),
-            const SizedBox(
-              height: 15,
-            ),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                  color: Colors.white70,
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(
-                    color: Colors.black12,
-                  )),
-              child: Column(
-                children: <Widget>[
-                  const Padding(padding: EdgeInsets.only(top: 20)),
-                  locLoad
-                      ? const CircularProgressIndicator()
-                      : Text(
-                          'You are at: '.toUpperCase() +
-                              _currentAddress.toUpperCase(),
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.visible,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14.5,
-                            fontFamily: FF.alata,
-                            color: Colors.black54,
-                          )),
-                  TextButton.icon(
-                    onPressed: () async{
-                      setState(() {
-                        locLoad = true;
-                      });
-                      _getCurrentLocation();
-                    },
-                    label: const Text(
-                      'Refresh Location',
-                    ),
-                    icon:
-                        const Icon(Icons.refresh_rounded, color: Colors.black),
-                  )
-                ],
-              ),
-            ),
+                icon: Icon(
+                  CupertinoIcons.power,
+                  color: white,
+                )),
           ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 30,
+              ),
+              const CircleAvatar(
+                radius: 45,
+                child: Icon(
+                  Icons.person,
+                  size: 45,
+                ),
+              ),
+              Text(nameLogin??''),
+              const SizedBox(
+                height: 15,
+              ),
+              MaterialButton(
+                  onPressed: () async {
+                    _getCurrentLocation();
+                    if (action == 'Already Mark') {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: const Text(
+                        'Attendance Already Mark!!',
+                        style: TextStyle(color: Colors.white),
+                      )));
+                      return;
+                    }
+                    setState(() {
+                      clickMeLoad = true;
+                    });
+      
+                    await openCamera().then(
+                      (value) {
+                        setState(() {
+                          clickMeLoad = false;
+                        });
+                      },
+                    );
+                  },
+                  color: primaryColor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                  child: clickMeLoad == false
+                      ? Text(
+                          action.toString(),
+                          style: TextStyle(color: Colors.white),
+                        )
+                      : SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: white,
+                          ),
+                        )),
+              const SizedBox(
+                height: 15,
+              ),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    color: Colors.white70,
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: Colors.black12,
+                    )),
+                child: Column(
+                  children: <Widget>[
+                    const Padding(padding: EdgeInsets.only(top: 20)),
+                    locLoad
+                        ? const CircularProgressIndicator()
+                        : Text(
+                            'You are at: '.toUpperCase() +
+                                _currentAddress.toUpperCase(),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.visible,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14.5,
+                              fontFamily: FF.alata,
+                              color: Colors.black54,
+                            )),
+                    TextButton.icon(
+                      onPressed: () async{
+                        setState(() {
+                          locLoad = true;
+                        });
+                        _getCurrentLocation();
+                      },
+                      label: const Text(
+                        'Refresh Location',
+                      ),
+                      icon:
+                          const Icon(Icons.refresh_rounded, color: Colors.black),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -344,30 +348,33 @@ class UserViewState extends State<UserView> {
                     "Time Outside Geofence: ${_outsideDuration.inMinutes} minutes");
               });
             }
-            // var _documentRef =
-            //     MyConstant().addEmp.where("email", isEqualTo: userEmail);
+            var _documentRef =
+                MyConstant().addEmp.where("email", isEqualTo: userEmail);
 
-            // try {
-            //   // Get the query snapshot
-            //   var userFromFirebase = await _documentRef.get();
+            try {
+              // Get the query snapshot
+              var userFromFirebase = await _documentRef.get();
 
-            //   // Check if there are any documents matching the query
-            //   if (userFromFirebase.docs.isNotEmpty) {
-            //     // Loop through each document and access data
-            //     userFromFirebase.docs.forEach((doc) {
-            //       var data = doc.id;
-            //       MyConstant()
-            //           .addEmp
-            //           .doc(doc.id)
-            //           .update({'geofenceSts': geofenceStatus});
-            //       print("User Data: ${data}");
-            //     });
-            //   } else {
-            //     print("No user found with the specified email.");
-            //   }
-            // } catch (e) {
-            //   print("Error retrieving user: $e");
-            // }
+              // Check if there are any documents matching the query
+              if (userFromFirebase.docs.isNotEmpty) {
+                // Loop through each document and access data
+                userFromFirebase.docs.forEach((doc) {
+                  var data = doc.id;
+                  MyConstant()
+                      .addEmp
+                      .doc(doc.id)
+                      .update({
+                    'geofenceSts': geofenceStatus,
+                    'geofenceTime': _outsideDuration.inMinutes
+                      });
+                  print("User Data: ${data}");
+                });
+              } else {
+                print("No user found with the specified email.");
+              }
+            } catch (e) {
+              print("Error retrieving user: $e");
+            }
 
             // Optionally fetch the address
             _getAddressFromLatLng(latitude, longitude);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:worklytics/core/constant.dart';
 import 'package:worklytics/core/globals.dart';
+import 'package:worklytics/feature/admin_view.dart';
 
 class AddEmployeePage extends StatefulWidget {
   @override
@@ -95,6 +96,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
                     "owner": 'no',
                     "isWorking": 'no',
                     "geofenceSts": 'Not fetched',
+                    "geofenceTime": '00:00',
                     "action": '0',
                   });
                   await MyConstant().SignUpAlfa.add({
@@ -106,6 +108,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
                     "owner": 'no',
                     "isWorking": 'no',
                     "geofenceSts": 'Not fetched',
+                    "geofenceTime": '00:00',
                     "action": '0',
 
                   });
@@ -115,6 +118,9 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Employee added successfully')),
                   );
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) =>AdminView()));
+
                 },
                 child: const Text('Save'),
               ),

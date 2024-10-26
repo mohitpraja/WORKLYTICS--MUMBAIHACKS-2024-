@@ -52,119 +52,122 @@ class _AdminViewState extends State<AdminView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {},
+      child: Scaffold(
+        appBar: AppBar(
+          actions: <Widget>[
+            IconButton(
+                onPressed: () async {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LoginPage()));
 
-      appBar: AppBar(
-        actions: <Widget>[
-          IconButton(
-              onPressed: () async {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LoginPage()));
+                  SharedPreferences prefs =
+                  await SharedPreferences.getInstance();
+                  prefs.clear();
+                },
+                icon: Icon(
+                  CupertinoIcons.power,
+                  color: primaryColor,
+                )),
+          ],
 
-                SharedPreferences prefs =
-                await SharedPreferences.getInstance();
-                prefs.clear();
-              },
-              icon: Icon(
-                CupertinoIcons.power,
-                color: primaryColor,
-              )),
-        ],
-
-        title: const Text("Dashoboard"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Card(
-              elevation: 3.5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              color: white,
-              shadowColor: Colors.black54,
-              child:  Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 30,
-                      child: Icon(
-                        Icons.person,
-                        size: 30,
-                      ), // Placeholder image URL
-                    ),
-                    SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          nameLogin.toString(),
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Text("Manager"),
-                      ],
-                    ),
-                  ],
+          title: const Text("Dashoboard"),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Card(
+                elevation: 3.5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                color: white,
+                shadowColor: Colors.black54,
+                child:  Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 30,
+                        child: Icon(
+                          Icons.person,
+                          size: 30,
+                        ), // Placeholder image URL
+                      ),
+                      SizedBox(width: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            nameLogin.toString(),
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          Text("Manager"),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            // Employee List Container
-            Expanded(
-              child: ListView.builder(
-                itemCount: employees.length,
-                itemBuilder: (context, index) {
-                  return  InkWell(
-                      onTap: (){
-                    print(index);
-                    if(index==1){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) =>  EmployeeList()),
-                      );
-                    }  if(index==0){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) =>  AttenList()),
-                      );
-                    }
-                  },child:Card(
-                    elevation: 3.5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    color: white,
-                     shadowColor: Colors.black54,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Text(employees[index]),
-                        ),
-                        const IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              Icons.arrow_forward_ios,
-                              size: 15,
-                            ))
-                      ],
-                    ),
-                  ));
-                },
+              const SizedBox(height: 10),
+              // Employee List Container
+              Expanded(
+                child: ListView.builder(
+                  itemCount: employees.length,
+                  itemBuilder: (context, index) {
+                    return  InkWell(
+                        onTap: (){
+                      print(index);
+                      if(index==1){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) =>  EmployeeList()),
+                        );
+                      }  if(index==0){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) =>  AttenList()),
+                        );
+                      }
+                    },child:Card(
+                      elevation: 3.5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      color: white,
+                       shadowColor: Colors.black54,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Text(employees[index]),
+                          ),
+                          const IconButton(
+                              onPressed: null,
+                              icon: Icon(
+                                Icons.arrow_forward_ios,
+                                size: 15,
+                              ))
+                        ],
+                      ),
+                    ));
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      // Floating Action Button for Adding Employee
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addEmployee,
-        child: Icon(Icons.person_add,color: primaryColor,),
+        // Floating Action Button for Adding Employee
+        floatingActionButton: FloatingActionButton(
+          onPressed: _addEmployee,
+          child: Icon(Icons.person_add,color: primaryColor,),
+        ),
       ),
     );
   }
