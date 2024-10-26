@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,7 +8,6 @@ import 'package:worklytics/core/bezierContainer.dart';
 import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/core/constant.dart';
 import 'package:worklytics/core/globals.dart';
-import 'package:worklytics/core/showDialogue.dart';
 import 'package:worklytics/feature/admin_view.dart';
 import 'package:worklytics/feature/signup.dart';
 import 'package:worklytics/feature/user_view.dart';
