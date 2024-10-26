@@ -11,13 +11,17 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/colors.dart';
+import 'package:worklytics/core/constant.dart';
 import 'package:worklytics/core/fonts.dart';
 import 'package:worklytics/core/globals.dart';
+import 'package:worklytics/core/regula.dart';
+import 'package:worklytics/feature/admin_view.dart';
 
 import 'login.dart';
 
@@ -79,114 +83,135 @@ class _UserViewState extends State<UserView> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async => false,
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            backgroundColor: primaryColor,
-            title: Text(
-              "Worklytics",
-              style: TextStyle(color: white),
-            ),
-            actions: <Widget>[
-              IconButton(
-                  onPressed: () async {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginPage()));
+    return Scaffold(
 
-                    SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
-                    prefs.clear();
-                  },
-                  icon: Icon(
-                    CupertinoIcons.power,
-                    color: white,
-                  )),
-            ],
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: primaryColor,
+          automaticallyImplyLeading: false,
+        title: GestureDetector(
+          onTap: () => Get.to(() => const AdminView()),
+          child: Text(
+            "Worklytics",
+            style: TextStyle(color: white),
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 30,
-                ),
-                const CircleAvatar(
-                  radius: 45,
-                  child: Icon(
-                    Icons.person,
-                    size: 45,
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                MaterialButton(
-                    onPressed: () async {
-                      _getCurrentLocation();
-                      setState(() {
-                        clickMeLoad = true;
-                      });
-                    },
-                    color: primaryColor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                    child: clickMeLoad == false
-                        ? const Text(
-                            "Click Me",
-                            style: TextStyle(color: Colors.white),
-                          )
-                        : Center(
-                            child: CircularProgressIndicator(
-                            color: white,
-                          ))),
-                const SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      color: Colors.white70,
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(
-                        color: Colors.black12,
-                      )),
-                  child: Column(
-                    children: <Widget>[
-                      const Padding(padding: EdgeInsets.only(top: 20)),
-                      locLoad
-                          ? const CircularProgressIndicator()
-                          : Text(
-                              'You are at: '.toUpperCase() +
-                                  _currentAddress.toUpperCase(),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.visible,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.5,
-                                fontFamily: FF.alata,
-                                color: Colors.black54,
-                              )),
-                      TextButton.icon(
-                        onPressed: () {
-                          setState(() {
-                            locLoad = true;
-                          });
-                          _getCurrentLocation();
-                        },
-                        label: const Text(
-                          'Refresh Location',
-                        ),
-                        icon: const Icon(Icons.refresh_rounded,
-                            color: Colors.black),
-                      )
-                    ],
-                  ),
-                ),
+        ),
+        actions: <Widget>[
+          IconButton(
+              onPressed: () async {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginPage()));
 
-                Text(
+                SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                prefs.clear();
+              },
+              icon: Icon(
+                CupertinoIcons.power,
+                color: white,
+              )),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 30,
+            ),
+            const CircleAvatar(
+              radius: 45,
+              child: Icon(
+                Icons.person,
+                size: 45,
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            MaterialButton(
+                onPressed: () async {
+                  _getCurrentLocation();
+                  if(action=='Already Mark'){
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: const Text(
+                          'Attendance Already Mark!!',
+                          style: TextStyle(color: Colors.white),
+                        )));
+return;
+                  }
+                  setState(() {
+                    clickMeLoad = true;
+                  });
+
+                  // await openCamera().then(
+                  //   (value) {
+                  //     setState(() {
+                  //       clickMeLoad = false;
+                  //     });
+                  //   },
+                  // );
+                },
+                color: primaryColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                child: clickMeLoad == false
+                    ?  Text(
+                  action.toString(),
+                        style: TextStyle(color: Colors.white),
+                      )
+                    : SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: white,
+                        ),
+                      )),
+            const SizedBox(
+              height: 15,
+            ),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                  color: Colors.white70,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                    color: Colors.black12,
+                  )),
+              child: Column(
+                children: <Widget>[
+                  const Padding(padding: EdgeInsets.only(top: 20)),
+                  locLoad
+                      ? const CircularProgressIndicator()
+                      : Text(
+                          'You are at: '.toUpperCase() +
+                              _currentAddress.toUpperCase(),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.visible,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.5,
+                            fontFamily: FF.alata,
+                            color: Colors.black54,
+                          )),
+                  TextButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        locLoad = true;
+                      });
+                      _getCurrentLocation();
+                    },
+                    label: const Text(
+                      'Refresh Location',
+                    ),
+                    icon: const Icon(Icons.refresh_rounded,
+                        color: Colors.black),
+                  )
+                ],
+              ),
+            ),
+                         Text(
                   geofenceStatus,
                   style: TextStyle(
                     fontSize: 24,
@@ -227,10 +252,17 @@ class _UserViewState extends State<UserView> {
                     ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ));
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: null,
+        child: Icon(
+          Icons.add_task,
+          color: primaryColor,
+        ),
+      ),
+    );
   }
 
   Future getImage() async {
@@ -250,6 +282,51 @@ class _UserViewState extends State<UserView> {
         .then((storageTask) async {
       // String showTime = DateFormat.jms().format(now);
       String link = await storageTask.ref.getDownloadURL();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: const Text(
+                    'Attendance Mark Successfully!!',
+                    style: TextStyle(color: Colors.white),
+                  )));
+      String setAction = '0';
+      if(action=='TimeIn'){
+        action = 'TimeOut';
+        setAction= '1';
+      }else if(action =='TimeOut'){
+        action = 'Already Mark';
+        setAction= '2';
+
+      }else{
+        setAction= '2';
+
+        action = 'Already Mark';
+      }
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString("action",setAction)??"0" ;
+      // Define the query
+      var _documentRef = MyConstant().addEmp.where("email", isEqualTo: userEmail);
+
+      try {
+        // Get the query snapshot
+        var userFromFirebase = await _documentRef.get();
+
+        // Check if there are any documents matching the query
+        if (userFromFirebase.docs.isNotEmpty) {
+          // Loop through each document and access data
+          userFromFirebase.docs.forEach((doc) {
+            var data = doc.id;
+            MyConstant().addEmp.doc(doc.id).update({
+              'action':setAction
+            });
+            print("User Data: ${data}");
+          });
+        } else {
+          print("No user found with the specified email.");
+        }
+      } catch (e) {
+        print("Error retrieving user: $e");
+      }
+
+
       // await ShowList.add({
       //   'email': userEmail,
       //   'name': nameLogin,
@@ -420,8 +497,6 @@ class _UserViewState extends State<UserView> {
       getWebLocation();
     } else {
       try {
-        log('get _getAddressFromLatLng');
-
         List<Placemark> placemarks =
             await placemarkFromCoordinates(latitude, longitude);
         Placemark place = placemarks[0];

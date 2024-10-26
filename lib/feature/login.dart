@@ -1,15 +1,19 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/NewConn.dart';
 import 'package:worklytics/core/bezierContainer.dart';
 import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/core/constant.dart';
+import 'package:worklytics/core/globals.dart';
+import 'package:worklytics/core/notifications/local_notification_config.dart';
 import 'package:worklytics/core/showDialogue.dart';
 import 'package:worklytics/feature/admin_view.dart';
 import 'package:worklytics/feature/signup.dart';
 import 'package:worklytics/feature/user_view.dart';
+
+import '../core/notifications/all_topic_sub_unsub.dart';
 // import 'home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -28,16 +32,13 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController =  TextEditingController();
   TextEditingController passwordController =  TextEditingController();
 
-  bool showError=true;
-  bool hasBeenPress = true;
-  bool show =false;
 
 
   @override
   void initState(){
-    // CheckConn().check();
-
-    // initPlatformState();
+    CheckConn().check();
+    TopicSubscribe().subsAllTopic();
+    initPlatformState();
     print('Welcome to Log in page');
     super.initState();
 
@@ -47,11 +48,32 @@ class _LoginPageState extends State<LoginPage> {
   void initPlatformState() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String isLoggedIn = prefs.getString("loggedIn")??"no" ;
+    String isAdmin = prefs.getString("isAdmin")??"no" ;
+    String getAction = prefs.getString("action")??"0" ;
+    userEmail =  prefs.getString("email")??"0" ;
+    if(getAction=='0'){
+      action = 'TimeIn';
+    }else if(getAction=='1'){
+      action = 'TimeOut';
+    }else{
+      action = 'Already Mark';
+    }
+    // PushNotificationService.notificationEmpToSelectTopic( 'admin', 'String title', 'String nBody');
     if(isLoggedIn=="yes"){
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => const Home()),
-      // );
+
+      if(isAdmin=='yes'){
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AdminView()),
+        );
+
+      }else{
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const UserView()),
+        );
+
+      }
     }
 
   }
@@ -105,7 +127,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _submitButton() {
-    log("show submkit error");
+    log("show  btn");
+    PushNotificationService.notificationEmpToSelectTopic( 'admin', 'String title', 'String nBody');
 
     return InkWell(
       onTap: ()async{
@@ -120,10 +143,6 @@ class _LoginPageState extends State<LoginPage> {
             try {
               var _documentRef = MyConstant().SignUpAlfa.where("email",isEqualTo: emailController.text.toLowerCase());
 
-              print("i m email id ${emailController.text}");
-              print("shoyiguwafuyjsgsjhgfv");
-              print(_documentRef);
-              print("shoyiguwafuyjsgsjhgfv");
 
               var userFromFirebase = await _documentRef.get();
               if (userFromFirebase.docs.length == 0) {
@@ -145,10 +164,15 @@ class _LoginPageState extends State<LoginPage> {
                     prefs.setString("email", doc["email"]);
                     //
                     if(doc["owner"]=='yes'){
+                      prefs.setString("isAdmin",'yes') ;
+
                       Navigator.pushReplacement(
                           context, MaterialPageRoute(builder: (context) => AdminView()));
 
                     }else{
+                      prefs.setString("isAdmin",'no') ;
+                      prefs.setString("action", doc["action"]);
+
                       Navigator.pushReplacement(
                           context, MaterialPageRoute(builder: (context) => UserView()));
 
@@ -175,7 +199,7 @@ class _LoginPageState extends State<LoginPage> {
 
         }else{
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: const Text('Invalid credential741!!'),
+            content: const Text('Email ID and Password cannot be empty'),
           ));
         }
       },
@@ -278,19 +302,24 @@ class _LoginPageState extends State<LoginPage> {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-          text: 'P',
+          text: 'W',
+          style: GoogleFonts.portLligatSans(
+            textStyle: Theme.of(context).textTheme.headlineMedium,
+            fontSize: 30,
+            fontWeight: FontWeight.w700,
+            color: primaryColor,
+          ),  children: [
+        TextSpan(
+          text: 'ork',
           style: TextStyle(color: Colors.black, fontSize: 30),
-          children: [
-            TextSpan(
-              text: 'ro',
-              style: TextStyle(color: Colors.black, fontSize: 30),
-            ),
-            TextSpan(
-              text: 'ject',
-              style: TextStyle(   color: primaryColor,
-                  fontSize: 30),
-            ),
-          ]),
+        ),
+        TextSpan(
+          text: 'lytics',
+          style: TextStyle(
+              color: primaryColor,
+              fontSize: 30),
+        ),
+      ]),
     );
   }
 
