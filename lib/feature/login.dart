@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String isLoggedIn = prefs.getString("loggedIn")??"no" ;
     String isAdmin = prefs.getString("isAdmin")??"no" ;
-    PushNotificationService.notificationEmpToSelectTopic( 'admin', 'String title', 'String nBody');
+    // PushNotificationService.notificationEmpToSelectTopic( 'admin', 'String title', 'String nBody');
     if(isLoggedIn=="yes"){
       if(isAdmin=='yes'){
         Navigator.push(
