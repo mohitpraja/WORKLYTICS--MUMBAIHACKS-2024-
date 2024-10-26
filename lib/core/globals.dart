@@ -9,4 +9,5 @@ String?  userEmail = '';
 String? nameLogin = '';
 String? photo = "";
 String? password = "";
+String? action = "TimeIn";
 int? phone = 0;

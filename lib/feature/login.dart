@@ -6,6 +6,7 @@ import 'package:worklytics/core/NewConn.dart';
 import 'package:worklytics/core/bezierContainer.dart';
 import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/core/constant.dart';
+import 'package:worklytics/core/globals.dart';
 import 'package:worklytics/core/notifications/local_notification_config.dart';
 import 'package:worklytics/core/showDialogue.dart';
 import 'package:worklytics/feature/admin_view.dart';
@@ -48,8 +49,18 @@ class _LoginPageState extends State<LoginPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String isLoggedIn = prefs.getString("loggedIn")??"no" ;
     String isAdmin = prefs.getString("isAdmin")??"no" ;
+    String getAction = prefs.getString("action")??"0" ;
+    userEmail =  prefs.getString("email")??"0" ;
+    if(getAction=='0'){
+      action = 'TimeIn';
+    }else if(getAction=='1'){
+      action = 'TimeOut';
+    }else{
+      action = 'Already Mark';
+    }
     // PushNotificationService.notificationEmpToSelectTopic( 'admin', 'String title', 'String nBody');
     if(isLoggedIn=="yes"){
+
       if(isAdmin=='yes'){
         Navigator.push(
           context,
@@ -132,10 +143,6 @@ class _LoginPageState extends State<LoginPage> {
             try {
               var _documentRef = MyConstant().SignUpAlfa.where("email",isEqualTo: emailController.text.toLowerCase());
 
-              print("i m email id ${emailController.text}");
-              print("shoyiguwafuyjsgsjhgfv");
-              print(_documentRef);
-              print("shoyiguwafuyjsgsjhgfv");
 
               var userFromFirebase = await _documentRef.get();
               if (userFromFirebase.docs.length == 0) {
@@ -164,6 +171,7 @@ class _LoginPageState extends State<LoginPage> {
 
                     }else{
                       prefs.setString("isAdmin",'no') ;
+                      prefs.setString("action", doc["action"]);
 
                       Navigator.pushReplacement(
                           context, MaterialPageRoute(builder: (context) => UserView()));
@@ -191,7 +199,7 @@ class _LoginPageState extends State<LoginPage> {
 
         }else{
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: const Text('Invalid credential741!!'),
+            content: const Text('Email ID and Password cannot be empty'),
           ));
         }
       },

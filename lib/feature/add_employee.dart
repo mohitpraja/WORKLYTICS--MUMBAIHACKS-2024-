@@ -93,6 +93,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
                     "owner": 'no',
                     "isWorking": 'no',
                     "geofenceSts": 'within',
+                    "action": '0',
                   });
                   await MyConstant().SignUpAlfa.add({
                     "nameLogin": name,

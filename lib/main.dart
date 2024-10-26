@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/feature/splash.dart';
 
+import 'core/notifications/display_all_notification.dart';
 import 'core/notifications/firebase_notification_config.dart';
 
 Future<void> main() async {
@@ -14,6 +15,7 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await PushNotificationServices().setupInteractedMessage();
+  await AlertNotification().notificationSetup();
 
   runApp(const MyApp());
 }
