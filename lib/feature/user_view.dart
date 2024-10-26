@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable
-
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
@@ -317,6 +315,10 @@ class UserViewState extends State<UserView> {
 
             bool isInside = distanceInMeters <= geofenceRadius;
 
+
+            if(action!='TimeOut'){
+              return;
+            }
             // Update timings only if geofence status changes
             if (isInside != isWithinGeofence) {
               setState(() {

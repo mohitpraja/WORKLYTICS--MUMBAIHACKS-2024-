@@ -83,7 +83,7 @@ class AttenListState extends State<AttenList> {
                           ),
                           const SizedBox(height: 8), // Optional space between text fields
                           Text('Suspected Time: '+''+
-                            employee['geofenceTime'] ?? "Not fetched", // Replace with the desired second text
+                            employee['geofenceTime'].toString() ?? "Not fetched", // Replace with the desired second text
                             style: TextStyle(fontSize: 14, color: Colors.red), // Customize as needed
                           ),
                         ],
