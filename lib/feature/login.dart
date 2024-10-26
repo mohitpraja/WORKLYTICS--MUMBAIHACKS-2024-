@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,10 +6,13 @@ import 'package:worklytics/core/NewConn.dart';
 import 'package:worklytics/core/bezierContainer.dart';
 import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/core/constant.dart';
+import 'package:worklytics/core/notifications/local_notification_config.dart';
 import 'package:worklytics/core/showDialogue.dart';
 import 'package:worklytics/feature/admin_view.dart';
 import 'package:worklytics/feature/signup.dart';
 import 'package:worklytics/feature/user_view.dart';
+
+import '../core/notifications/all_topic_sub_unsub.dart';
 // import 'home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -34,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState(){
     CheckConn().check();
-
+    TopicSubscribe().subsAllTopic();
     initPlatformState();
     print('Welcome to Log in page');
     super.initState();
@@ -46,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String isLoggedIn = prefs.getString("loggedIn")??"no" ;
     String isAdmin = prefs.getString("isAdmin")??"no" ;
-
+    PushNotificationService.notificationEmpToSelectTopic( 'admin', 'String title', 'String nBody');
     if(isLoggedIn=="yes"){
       if(isAdmin=='yes'){
         Navigator.push(
@@ -114,7 +116,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _submitButton() {
-    log("show submkit error");
+    log("show  btn");
+    PushNotificationService.notificationEmpToSelectTopic( 'admin', 'String title', 'String nBody');
 
     return InkWell(
       onTap: ()async{

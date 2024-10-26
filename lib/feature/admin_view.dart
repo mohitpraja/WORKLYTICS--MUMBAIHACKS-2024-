@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/colors.dart';
@@ -5,6 +6,7 @@ import 'package:worklytics/core/globals.dart';
 
 import 'EmployeeList.dart';
 import 'add_employee.dart';
+import 'login.dart';
 
 class AdminView extends StatefulWidget {
   const AdminView({super.key});
@@ -50,7 +52,24 @@ class _AdminViewState extends State<AdminView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+              onPressed: () async {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginPage()));
+
+                SharedPreferences prefs =
+                await SharedPreferences.getInstance();
+                prefs.clear();
+              },
+              icon: Icon(
+                CupertinoIcons.power,
+                color: primaryColor,
+              )),
+        ],
+
         title: const Text("Dashoboard"),
       ),
       body: Padding(
@@ -113,7 +132,7 @@ class _AdminViewState extends State<AdminView> {
                       borderRadius: BorderRadius.circular(6),
                     ),
                     color: white,
-                    shadowColor: Colors.black54,
+                     shadowColor: Colors.black54,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

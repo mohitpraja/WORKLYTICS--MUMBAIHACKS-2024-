@@ -71,136 +71,136 @@ class _UserViewState extends State<UserView> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async => false,
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            backgroundColor: primaryColor,
-            title: GestureDetector(
-              onTap: () => Get.to(() => const AdminView()),
-              child: Text(
-                "Worklytics",
-                style: TextStyle(color: white),
+    return Scaffold(
+
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: primaryColor,
+          automaticallyImplyLeading: false,
+        title: GestureDetector(
+          onTap: () => Get.to(() => const AdminView()),
+          child: Text(
+            "Worklytics",
+            style: TextStyle(color: white),
+          ),
+        ),
+        actions: <Widget>[
+          IconButton(
+              onPressed: () async {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginPage()));
+
+                SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                prefs.clear();
+              },
+              icon: Icon(
+                CupertinoIcons.power,
+                color: white,
+              )),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 30,
+            ),
+            const CircleAvatar(
+              radius: 45,
+              child: Icon(
+                Icons.person,
+                size: 45,
               ),
             ),
-            actions: <Widget>[
-              IconButton(
-                  onPressed: () async {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginPage()));
-
-                    SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
-                    prefs.clear();
-                  },
-                  icon: Icon(
-                    CupertinoIcons.power,
-                    color: white,
-                  )),
-            ],
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 30,
-                ),
-                const CircleAvatar(
-                  radius: 45,
-                  child: Icon(
-                    Icons.person,
-                    size: 45,
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                MaterialButton(
-                    onPressed: () async {
+            const SizedBox(
+              height: 15,
+            ),
+            MaterialButton(
+                onPressed: () async {
+                  setState(() {
+                    clickMeLoad = true;
+                  });
+                  _getCurrentLocation();
+                  await openCamera().then(
+                    (value) {
                       setState(() {
-                        clickMeLoad = true;
+                        clickMeLoad = false;
+                      });
+                    },
+                  );
+                },
+                color: primaryColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                child: clickMeLoad == false
+                    ? const Text(
+                        "Click Me",
+                        style: TextStyle(color: Colors.white),
+                      )
+                    : SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: white,
+                        ),
+                      )),
+            const SizedBox(
+              height: 15,
+            ),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                  color: Colors.white70,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                    color: Colors.black12,
+                  )),
+              child: Column(
+                children: <Widget>[
+                  const Padding(padding: EdgeInsets.only(top: 20)),
+                  locLoad
+                      ? const CircularProgressIndicator()
+                      : Text(
+                          'You are at: '.toUpperCase() +
+                              _currentAddress.toUpperCase(),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.visible,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.5,
+                            fontFamily: FF.alata,
+                            color: Colors.black54,
+                          )),
+                  TextButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        locLoad = true;
                       });
                       _getCurrentLocation();
-                      await openCamera().then(
-                        (value) {
-                          setState(() {
-                            clickMeLoad = false;
-                          });
-                        },
-                      );
                     },
-                    color: primaryColor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                    child: clickMeLoad == false
-                        ? const Text(
-                            "Click Me",
-                            style: TextStyle(color: Colors.white),
-                          )
-                        : SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: white,
-                            ),
-                          )),
-                const SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      color: Colors.white70,
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(
-                        color: Colors.black12,
-                      )),
-                  child: Column(
-                    children: <Widget>[
-                      const Padding(padding: EdgeInsets.only(top: 20)),
-                      locLoad
-                          ? const CircularProgressIndicator()
-                          : Text(
-                              'You are at: '.toUpperCase() +
-                                  _currentAddress.toUpperCase(),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.visible,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.5,
-                                fontFamily: FF.alata,
-                                color: Colors.black54,
-                              )),
-                      TextButton.icon(
-                        onPressed: () {
-                          setState(() {
-                            locLoad = true;
-                          });
-                          _getCurrentLocation();
-                        },
-                        label: const Text(
-                          'Refresh Location',
-                        ),
-                        icon: const Icon(Icons.refresh_rounded,
-                            color: Colors.black),
-                      )
-                    ],
-                  ),
-                ),
-              ],
+                    label: const Text(
+                      'Refresh Location',
+                    ),
+                    icon: const Icon(Icons.refresh_rounded,
+                        color: Colors.black),
+                  )
+                ],
+              ),
             ),
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: null,
-            child: Icon(
-              Icons.add_task,
-              color: primaryColor,
-            ),
-          ),
-        ));
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: null,
+        child: Icon(
+          Icons.add_task,
+          color: primaryColor,
+        ),
+      ),
+    );
   }
 
   Future openCamera() async {
@@ -219,6 +219,11 @@ class _UserViewState extends State<UserView> {
         .then((storageTask) async {
       // String showTime = DateFormat.jms().format(now);
       String link = await storageTask.ref.getDownloadURL();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: const Text(
+                    'Attendance Mark Successfully!!',
+                    style: TextStyle(color: Colors.white),
+                  )));
       // await ShowList.add({
       //   'email': userEmail,
       //   'name': nameLogin,
