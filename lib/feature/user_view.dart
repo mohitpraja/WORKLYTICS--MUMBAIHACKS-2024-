@@ -43,7 +43,7 @@ class UserViewState extends State<UserView> {
       19.0708066; // Replace with your geofence center latitude
   final double geofenceLongitude =
       72.8760758; // Replace with your geofence center longitude
-  final double geofenceRadius = 5000.0; //
+  final double geofenceRadius = 50.0; //
   bool isWithinGeofence = false; // Track if inside geofence
   String geofenceStatus = "Outside Geofence";
 
