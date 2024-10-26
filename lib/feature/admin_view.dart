@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/core/globals.dart';
+import 'package:worklytics/feature/atten_list.dart';
 
 import 'EmployeeList.dart';
 import 'add_employee.dart';
@@ -17,7 +18,7 @@ class AdminView extends StatefulWidget {
 
 class _AdminViewState extends State<AdminView> {
   // List to store employee names (you could add more fields as needed)
-  List<String> employees = ["All Attendances", "All emoplyees","All Tasks"];
+  List<String> employees = ["All Attendance", "All Employee"];
 
   // Function to add a new employee
 
@@ -124,6 +125,11 @@ class _AdminViewState extends State<AdminView> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) =>  EmployeeList()),
+                      );
+                    }  if(index==0){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) =>  AttenList()),
                       );
                     }
                   },child:Card(

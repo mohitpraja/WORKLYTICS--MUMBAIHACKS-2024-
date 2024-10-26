@@ -29,10 +29,10 @@ class UserView extends StatefulWidget {
   const UserView({super.key});
 
   @override
-  _UserViewState createState() => _UserViewState();
+  UserViewState createState() => UserViewState();
 }
 
-class _UserViewState extends State<UserView> {
+class UserViewState extends State<UserView> {
   final picker = ImagePicker();
 
   final TextEditingController remarkController = TextEditingController();
@@ -138,19 +138,19 @@ class _UserViewState extends State<UserView> {
                           'Attendance Already Mark!!',
                           style: TextStyle(color: Colors.white),
                         )));
-return;
+                   return;
                   }
                   setState(() {
                     clickMeLoad = true;
                   });
 
-                  // await openCamera().then(
-                  //   (value) {
-                  //     setState(() {
-                  //       clickMeLoad = false;
-                  //     });
-                  //   },
-                  // );
+                  await openCamera().then(
+                    (value) {
+                      setState(() {
+                        clickMeLoad = false;
+                      });
+                    },
+                  );
                 },
                 color: primaryColor,
                 shape: RoundedRectangleBorder(
@@ -211,158 +211,12 @@ return;
                 ],
               ),
             ),
-                         Text(
-                  geofenceStatus,
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: isWithinGeofence ? Colors.green : Colors.red,
-                  ),
-                ),
-
-                // ignore: avoid_unnecessary_containers
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      color: Colors.white70,
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(
-                        color: Colors.black12,
-                      )),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '${_outsideDuration.inMinutes} minutes',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          color: Colors.red,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Text(
-                        '${_insideDuration.inMinutes} minutes',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-          ],
+           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: null,
-        child: Icon(
-          Icons.add_task,
-          color: primaryColor,
-        ),
-      ),
-    );
+     );
   }
 
-  Future getImage() async {
-    XFile? image34;
-    image34 = await ImagePicker()
-        .pickImage(source: ImageSource.camera, imageQuality: 100);
-    FirebaseStorage fs = FirebaseStorage.instance;
-    Reference rootReference = fs.ref();
-    Reference pictureFolderRef = rootReference
-        .child("pictures")
-        .child(formattedDate)
-        .child(DateTime.now().toString());
-    // Reference pictureFolderRef = rootReference.child("pictures").child("image");
-    pictureFolderRef
-        .putFile(File(image34!.path))
-        .whenComplete(() {})
-        .then((storageTask) async {
-      // String showTime = DateFormat.jms().format(now);
-      String link = await storageTask.ref.getDownloadURL();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: const Text(
-                    'Attendance Mark Successfully!!',
-                    style: TextStyle(color: Colors.white),
-                  )));
-      String setAction = '0';
-      if(action=='TimeIn'){
-        action = 'TimeOut';
-        setAction= '1';
-      }else if(action =='TimeOut'){
-        action = 'Already Mark';
-        setAction= '2';
-
-      }else{
-        setAction= '2';
-
-        action = 'Already Mark';
-      }
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("action",setAction)??"0" ;
-      // Define the query
-      var _documentRef = MyConstant().addEmp.where("email", isEqualTo: userEmail);
-
-      try {
-        // Get the query snapshot
-        var userFromFirebase = await _documentRef.get();
-
-        // Check if there are any documents matching the query
-        if (userFromFirebase.docs.isNotEmpty) {
-          // Loop through each document and access data
-          userFromFirebase.docs.forEach((doc) {
-            var data = doc.id;
-            MyConstant().addEmp.doc(doc.id).update({
-              'action':setAction
-            });
-            print("User Data: ${data}");
-          });
-        } else {
-          print("No user found with the specified email.");
-        }
-      } catch (e) {
-        print("Error retrieving user: $e");
-      }
-
-
-      // await ShowList.add({
-      //   'email': userEmail,
-      //   'name': nameLogin,
-      //   'Date': formattedDate,
-      //   'Time': showTime,
-      //   'phone': phone,
-      //   'address': area,
-      //   'delivery': deliveryOption,
-      //   'remark': remarkController.text,
-      //   'DateInSec': DateTime.now().toLocal().microsecondsSinceEpoch,
-      //   'web': false,
-      //   // 'image': img64,
-      //   'imageLink': link,
-      // }).then((value) => {
-      //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //         content: const Text(
-      //           'Attendance Mark Successfully!!',
-      //           style: TextStyle(color: Colors.white),
-      //         ),
-      //         action: SnackBarAction(
-      //           label: 'Check Now !',
-      //           onPressed: () {
-      //             Navigator.push(
-      //               context,
-      //               MaterialPageRoute(builder: (context) => AttendanceList()),
-      //             );
-      //           },
-      //         ),
-      //       )),
-      //     });
-      // setState(() {
-      //   clickMeLoad = false;
-      // });
-    });
-    // todo --- You have to hit your Api Over Here
-  }
 
   Future<bool> checkPermissionOfLocation() async {
     loc.Location location = loc.Location();
@@ -411,8 +265,8 @@ return;
 
       if (defaultTargetPlatform == TargetPlatform.android) {
         locationSettings = AndroidSettings(
-          accuracy: LocationAccuracy.low,
-          distanceFilter: 10,
+          accuracy: LocationAccuracy.medium,
+          distanceFilter: 100,
           forceLocationManager: true,
           intervalDuration: const Duration(seconds: 40),
         );
@@ -428,7 +282,7 @@ return;
       } else {
         locationSettings = const LocationSettings(
           accuracy: LocationAccuracy.medium,
-          distanceFilter: 10,
+          distanceFilter: 100,
         );
       }
 
@@ -437,7 +291,7 @@ return;
         await locationPoint.getLocation();
 
         _locationSubscription = locationPoint.onLocationChanged
-            .listen((loc.LocationData currentLocation) {
+            .listen((loc.LocationData currentLocation) async {
           log('get _getCurrentLocation');
           final latitude = currentLocation.latitude;
           final longitude = currentLocation.longitude;
@@ -483,6 +337,29 @@ return;
                     "Time Outside Geofence: ${_outsideDuration.inMinutes} minutes");
               });
             }
+            var _documentRef = MyConstant().addEmp.where("email", isEqualTo: userEmail);
+
+            try {
+              // Get the query snapshot
+              var userFromFirebase = await _documentRef.get();
+
+              // Check if there are any documents matching the query
+              if (userFromFirebase.docs.isNotEmpty) {
+                // Loop through each document and access data
+                userFromFirebase.docs.forEach((doc) {
+                  var data = doc.id;
+                  MyConstant().addEmp.doc(doc.id).update({
+                    'geofence':geofenceStatus
+                  });
+                  print("User Data: ${data}");
+                });
+              } else {
+                print("No user found with the specified email.");
+              }
+            } catch (e) {
+              print("Error retrieving user: $e");
+            }
+
 
             // Optionally fetch the address
             _getAddressFromLatLng(latitude, longitude);
@@ -523,87 +400,6 @@ return;
     _locationSubscription = null;
   }
 
-  Future remarkPop(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: const Text('Select an option'),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    RadioListTile(
-                      title: const Text('Day'),
-                      value: 'Day',
-                      groupValue: deliveryOption,
-                      onChanged: (value) {
-                        setState(() {
-                          deliveryOption = value.toString();
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: const Text('Night'),
-                      value: 'Night',
-                      groupValue: deliveryOption,
-                      onChanged: (value) {
-                        setState(() {
-                          deliveryOption = value.toString();
-                        });
-                      },
-                    ),
-                    RadioListTile(
-                      title: const Text('Extra'),
-                      value: 'Extra',
-                      groupValue: deliveryOption,
-                      onChanged: (value) {
-                        setState(() {
-                          deliveryOption = value.toString();
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: remarkController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter text here',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  child: const Text('Cancel'),
-                  onPressed: () async {
-                    // Handle submit action here
-                    setState(() {
-                      clickMeLoad = false;
-                    });
-
-                    Navigator.of(context).pop();
-                    // await getImage();
-                  },
-                ),
-                TextButton(
-                  child: const Text('Submit'),
-                  onPressed: () async {
-                    // Handle submit action here
-                    Navigator.of(context).pop();
-                    await getImage();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
 
   Future noInternetPop() {
     return showDialog(
@@ -645,5 +441,70 @@ return;
       area = _currentAddress;
       locLoad = false;
     });
+  }
+  Future openCamera() async {
+    File? image34;
+    image34 = await RegulaFaceRecognition.openCamera();
+    FirebaseStorage fs = FirebaseStorage.instance;
+    Reference rootReference = fs.ref();
+    Reference pictureFolderRef = rootReference
+        .child("pictures")
+        .child(formattedDate)
+        .child(DateTime.now().toString());
+    // Reference pictureFolderRef = rootReference.child("pictures").child("image");
+    pictureFolderRef
+        .putFile(File(image34!.path))
+        .whenComplete(() {})
+        .then((storageTask) async {
+      // String showTime = DateFormat.jms().format(now);
+      String link = await storageTask.ref.getDownloadURL();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text(
+            'Attendance Mark Successfully!!',
+            style: TextStyle(color: Colors.white),
+          )));
+      String setAction = '0';
+      if(action=='TimeIn'){
+        action = 'TimeOut';
+        setAction= '1';
+      }else if(action =='TimeOut'){
+        action = 'Already Mark';
+        setAction= '2';
+
+      }else{
+        setAction= '2';
+
+        action = 'Already Mark';
+      }
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString("action",setAction)??"0" ;
+      // Define the query
+      var _documentRef = MyConstant().addEmp.where("email", isEqualTo: userEmail);
+
+      try {
+        // Get the query snapshot
+        var userFromFirebase = await _documentRef.get();
+
+        // Check if there are any documents matching the query
+        if (userFromFirebase.docs.isNotEmpty) {
+          // Loop through each document and access data
+          userFromFirebase.docs.forEach((doc) {
+            var data = doc.id;
+            MyConstant().addEmp.doc(doc.id).update({
+              'action':setAction,
+              'isWorking':setAction=='1'?'yes':'no',
+            });
+            print("User Data: ${data}");
+          });
+        } else {
+          print("No user found with the specified email.");
+        }
+      } catch (e) {
+        print("Error retrieving user: $e");
+      }
+
+
+    });
+    // todo --- You have to hit your Api Over Here
   }
 }

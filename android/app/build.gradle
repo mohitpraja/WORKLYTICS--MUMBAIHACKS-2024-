@@ -13,8 +13,6 @@ android {
     ndkVersion "27.0.12077973"
 
     compileOptions {
-        coreLibraryDesugaringEnabled true
-
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -49,7 +47,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.android.support:multidex:1.0.3'
     implementation("androidx.appcompat:appcompat:1.6.0-rc01")
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
 
     // Add any other Firebase dependencies you're using
 }

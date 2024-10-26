@@ -7,14 +7,10 @@ import 'package:worklytics/core/bezierContainer.dart';
 import 'package:worklytics/core/colors.dart';
 import 'package:worklytics/core/constant.dart';
 import 'package:worklytics/core/globals.dart';
-import 'package:worklytics/core/notifications/local_notification_config.dart';
 import 'package:worklytics/core/showDialogue.dart';
 import 'package:worklytics/feature/admin_view.dart';
 import 'package:worklytics/feature/signup.dart';
 import 'package:worklytics/feature/user_view.dart';
-
-import '../core/notifications/all_topic_sub_unsub.dart';
-// import 'home.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key, this.title}) : super(key: key);
@@ -37,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState(){
     CheckConn().check();
-    TopicSubscribe().subsAllTopic();
+    // TopicSubscribe().subsAllTopic();
     initPlatformState();
     print('Welcome to Log in page');
     super.initState();
@@ -79,28 +75,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-
-  Widget _backButton() {
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
-            ),
-            Text('Back',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _entryField(String title, controller) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
@@ -128,14 +102,12 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _submitButton() {
     log("show  btn");
-    PushNotificationService.notificationEmpToSelectTopic( 'admin', 'String title', 'String nBody');
+    // PushNotificationService.notificationEmpToSelectTopic( 'admin', 'String title', 'String nBody');
 
     return InkWell(
       onTap: ()async{
         int  lemail = emailController.text.length;
         int  lpass = passwordController.text.length;
-        String e =emailController.text.toLowerCase();
-        String p =passwordController.text;
         if(lemail>1 && lpass>1) {
           bool check = await CheckConn().check();
           if (check == true) {
@@ -367,7 +339,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              Positioned(top: 40, left: 0, child: _backButton()),
             ],
           ),
         ));

@@ -3,14 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:worklytics/core/constant.dart';
 import 'package:worklytics/core/globals.dart';
 
-class EmployeeList extends StatefulWidget {
-  const EmployeeList({super.key});
+class AttenList extends StatefulWidget {
+  const AttenList({super.key});
 
   @override
-  _EmployeeListState createState() => _EmployeeListState();
+  AttenListState createState() => AttenListState();
 }
 
-class _EmployeeListState extends State<EmployeeList> {
+class AttenListState extends State<AttenList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +52,15 @@ class _EmployeeListState extends State<EmployeeList> {
               itemBuilder: (context, index) {
                 final employee = employees[index];
                 return ListTile(
-
+                  trailing: Checkbox(
+                    value: employee['isWorking'] == 'no' ? false : true,
+                    onChanged: (bool? value) {
+                      // handle checkbox change here if needed
+                    },
+                  ),
+                  /*leading: CircleAvatar(
+                    child: Text(employee['nameLogin']?[0] ?? "N/A"),
+                  ),*/
                   leading: CircleAvatar(
                     child: Text(
                       (employee['nameLogin'] != null && employee['nameLogin'].isNotEmpty)
@@ -62,6 +70,7 @@ class _EmployeeListState extends State<EmployeeList> {
                   ),
 
                   title: Text(employee['nameLogin'] ?? "No Name"),
+                  subtitle: Text(employee['geofenceSts'] ?? "Not fetched"),
                 );
               },
             );
