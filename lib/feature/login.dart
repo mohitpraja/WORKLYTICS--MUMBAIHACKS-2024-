@@ -119,7 +119,9 @@ class _LoginPageState extends State<LoginPage> {
               var userFromFirebase = await _documentRef.get();
               if (userFromFirebase.docs.length == 0) {
                 prefs.clear();
-                DialogBuilder(context).showResultDialog('Invalid Credentials!');
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: const Text('Invalid Credentials!'),
+                ));
                 await Future.delayed(const Duration(seconds: 2));
 
               }else{
@@ -152,7 +154,9 @@ class _LoginPageState extends State<LoginPage> {
 
                   } else {
                     prefs.clear();
-                    DialogBuilder(context).showResultDialog('Invalid Credentials!');
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: const Text('Invalid Credentials!'),
+                    ));
                     await Future.delayed(const Duration(seconds: 2));
                   }
                 });
@@ -162,7 +166,10 @@ class _LoginPageState extends State<LoginPage> {
               log(e.toString());
               ///empty database
               prefs.clear();
-              DialogBuilder(context).showResultDialog('Something went wrong\n please try after sometime');
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: const Text('Something went wrong\n please try after sometime'),
+              ));
+              // DialogBuilder(context).showResultDialog('Something went wrong\n please try after sometime');
               // DialogBuilder(context).showResultDialog('Invalid Credentials963!');
               await Future.delayed(const Duration(seconds: 2));
             }
