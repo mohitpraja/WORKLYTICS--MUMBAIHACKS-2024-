@@ -205,29 +205,6 @@ class UserViewState extends State<UserView> {
                           )),
                   TextButton.icon(
                     onPressed: () async{
-                      var _documentRef =
-                      MyConstant().addEmp.where("email", isEqualTo: userEmail);
-
-                      try {
-                        // Get the query snapshot
-                        var userFromFirebase = await _documentRef.get();
-
-                        // Check if there are any documents matching the query
-                        if (userFromFirebase.docs.isNotEmpty) {
-                          // Loop through each document and access data
-                          userFromFirebase.docs.forEach((doc) {
-                            var data = doc.id;
-                            MyConstant().addEmp.doc(doc.id).update({
-                              'isWorking':  'yes',
-                            });
-                            print("User Data: ${data}");
-                          });
-                        } else {
-                          print("No user found with the specified email.");
-                        }
-                      } catch (e) {
-                        print("Error retrieving user: $e");
-                      }
                       setState(() {
                         locLoad = true;
                       });
