@@ -349,7 +349,7 @@ class UserViewState extends State<UserView> {
                 userFromFirebase.docs.forEach((doc) {
                   var data = doc.id;
                   MyConstant().addEmp.doc(doc.id).update({
-                    'geofence':geofenceStatus
+                    'geofenceSts':geofenceStatus
                   });
                   print("User Data: ${data}");
                 });

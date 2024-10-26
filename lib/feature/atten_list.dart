@@ -58,9 +58,6 @@ class AttenListState extends State<AttenList> {
                       // handle checkbox change here if needed
                     },
                   ),
-                  /*leading: CircleAvatar(
-                    child: Text(employee['nameLogin']?[0] ?? "N/A"),
-                  ),*/
                   leading: CircleAvatar(
                     child: Text(
                       (employee['nameLogin'] != null && employee['nameLogin'].isNotEmpty)

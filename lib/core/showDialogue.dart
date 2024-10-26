@@ -22,7 +22,7 @@ class DialogBuilder {
               style: ElevatedButton.styleFrom(
                   // primary: appColorTimeINMaster,
                   textStyle: TextStyle(
-                      fontSize: 30, fontWeight: FontWeight.bold)),
+                      fontSize: 15, fontWeight: FontWeight.normal)),
 
               onPressed: () => Navigator.pop(context, true), // passing true
               child: Text('Back'),
