@@ -124,6 +124,7 @@ class UserViewState extends State<UserView> {
                 size: 45,
               ),
             ),
+            Text(nameLogin??''),
             const SizedBox(
               height: 15,
             ),
@@ -334,30 +335,30 @@ class UserViewState extends State<UserView> {
                     "Time Outside Geofence: ${_outsideDuration.inMinutes} minutes");
               });
             }
-            var _documentRef =
-                MyConstant().addEmp.where("email", isEqualTo: userEmail);
+            // var _documentRef =
+            //     MyConstant().addEmp.where("email", isEqualTo: userEmail);
 
-            try {
-              // Get the query snapshot
-              var userFromFirebase = await _documentRef.get();
+            // try {
+            //   // Get the query snapshot
+            //   var userFromFirebase = await _documentRef.get();
 
-              // Check if there are any documents matching the query
-              if (userFromFirebase.docs.isNotEmpty) {
-                // Loop through each document and access data
-                userFromFirebase.docs.forEach((doc) {
-                  var data = doc.id;
-                  MyConstant()
-                      .addEmp
-                      .doc(doc.id)
-                      .update({'geofenceSts': geofenceStatus});
-                  print("User Data: ${data}");
-                });
-              } else {
-                print("No user found with the specified email.");
-              }
-            } catch (e) {
-              print("Error retrieving user: $e");
-            }
+            //   // Check if there are any documents matching the query
+            //   if (userFromFirebase.docs.isNotEmpty) {
+            //     // Loop through each document and access data
+            //     userFromFirebase.docs.forEach((doc) {
+            //       var data = doc.id;
+            //       MyConstant()
+            //           .addEmp
+            //           .doc(doc.id)
+            //           .update({'geofenceSts': geofenceStatus});
+            //       print("User Data: ${data}");
+            //     });
+            //   } else {
+            //     print("No user found with the specified email.");
+            //   }
+            // } catch (e) {
+            //   print("Error retrieving user: $e");
+            // }
 
             // Optionally fetch the address
             _getAddressFromLatLng(latitude, longitude);

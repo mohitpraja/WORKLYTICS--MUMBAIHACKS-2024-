@@ -67,7 +67,9 @@ class AttenListState extends State<AttenList> {
                   ),
 
                   title: Text(employee['nameLogin'] ?? "No Name"),
-                  subtitle: Text(employee['geofenceSts'] ?? "Not fetched"),
+                  subtitle: Text(employee['geofenceSts'] ?? "Not fetched",style: TextStyle(
+                    color: employee['geofenceSts'].isNotEmpty && employee['geofenceSts'].contains('Inside') ? Colors.green: Colors.red
+                  ),),
                 );
               },
             );

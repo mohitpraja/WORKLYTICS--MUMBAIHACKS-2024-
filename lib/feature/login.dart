@@ -22,58 +22,46 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
-
-
-  TextEditingController emailController =  TextEditingController();
-  TextEditingController passwordController =  TextEditingController();
-
-
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
-  void initState(){
+  void initState() {
     CheckConn().check();
     // TopicSubscribe().subsAllTopic();
     initPlatformState();
     print('Welcome to Log in page');
     super.initState();
-
   }
 
-
-  void initPlatformState() async{
+  void initPlatformState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String isLoggedIn = prefs.getString("loggedIn")??"no" ;
-    String isAdmin = prefs.getString("isAdmin")??"no" ;
-    String getAction = prefs.getString("action")??"0" ;
-    userEmail =  prefs.getString("email")??"0" ;
-    if(getAction=='0'){
+    String isLoggedIn = prefs.getString("loggedIn") ?? "no";
+    String isAdmin = prefs.getString("isAdmin") ?? "no";
+    String getAction = prefs.getString("action") ?? "0";
+    userEmail = prefs.getString("email") ?? "0";
+    if (getAction == '0') {
       action = 'TimeIn';
-    }else if(getAction=='1'){
+    } else if (getAction == '1') {
       action = 'TimeOut';
-    }else{
+    } else {
       action = 'Already Mark';
     }
     // PushNotificationService.notificationEmpToSelectTopic( 'admin', 'String title', 'String nBody');
-    if(isLoggedIn=="yes"){
-
-      if(isAdmin=='yes'){
+    if (isLoggedIn == "yes") {
+      if (isAdmin == 'yes') {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const AdminView()),
         );
-
-      }else{
+      } else {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const UserView()),
         );
-
       }
     }
-
   }
-
 
   Widget _entryField(String title, controller) {
     return Container(
@@ -89,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
             height: 10,
           ),
           TextField(
-              controller:controller,
+              controller: controller,
               obscureText: false,
               decoration: InputDecoration(
                   border: InputBorder.none,
@@ -105,71 +93,68 @@ class _LoginPageState extends State<LoginPage> {
     // PushNotificationService.notificationEmpToSelectTopic( 'admin', 'String title', 'String nBody');
 
     return InkWell(
-      onTap: ()async{
-        int  lemail = emailController.text.length;
-        int  lpass = passwordController.text.length;
-        if(lemail>1 && lpass>1) {
+      onTap: () async {
+        int lemail = emailController.text.length;
+        int lpass = passwordController.text.length;
+        if (lemail > 1 && lpass > 1) {
           bool check = await CheckConn().check();
           if (check == true) {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             try {
-              var _documentRef = MyConstant().SignUpAlfa.where("email",isEqualTo: emailController.text.toLowerCase());
-
+              var _documentRef = MyConstant().SignUpAlfa.where("email",
+                  isEqualTo: emailController.text.toLowerCase());
 
               var userFromFirebase = await _documentRef.get();
               if (userFromFirebase.docs.length == 0) {
                 prefs.clear();
                 DialogBuilder(context).showResultDialog('Invalid Credentials!');
                 await Future.delayed(const Duration(seconds: 2));
-
-              }else{
+              } else {
                 userFromFirebase.docs.forEach((doc) async {
                   print("i m passwordController id ${passwordController.text}");
                   print("i m passwordController id--- ${doc["password"]}");
 
                   // print(doc["registerPhone"]);
-                  if (doc["password"]== passwordController.text) {
-                    prefs.setString("loggedIn",'yes') ;
+                  if (doc["password"] == passwordController.text) {
+                    nameLogin = doc["nameLogin"];
+                    prefs.setString("loggedIn", 'yes');
                     prefs.setInt('phone', int.parse(doc["phone"].toString()));
                     prefs.setString("nameLogin", doc["nameLogin"]);
                     prefs.setString("password", doc["password"]);
                     prefs.setString("email", doc["email"]);
                     //
-                    if(doc["owner"]=='yes'){
-                      prefs.setString("isAdmin",'yes') ;
+                    if (doc["owner"] == 'yes') {
+                      prefs.setString("isAdmin", 'yes');
 
-                      Navigator.pushReplacement(
-                          context, MaterialPageRoute(builder: (context) => AdminView()));
-
-                    }else{
-                      prefs.setString("isAdmin",'no') ;
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => AdminView()));
+                    } else {
+                      prefs.setString("isAdmin", 'no');
                       prefs.setString("action", doc["action"]);
 
-                      Navigator.pushReplacement(
-                          context, MaterialPageRoute(builder: (context) => UserView()));
-
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => UserView()));
                     }
-
                   } else {
                     prefs.clear();
-                    DialogBuilder(context).showResultDialog('Invalid Credentials!');
+                    DialogBuilder(context)
+                        .showResultDialog('Invalid Credentials!');
                     await Future.delayed(const Duration(seconds: 2));
                   }
                 });
               }
-
             } on Exception catch (e) {
               log(e.toString());
+
               ///empty database
               prefs.clear();
-              DialogBuilder(context).showResultDialog('Something went wrong\n please try after sometime');
+              DialogBuilder(context).showResultDialog(
+                  'Something went wrong\n please try after sometime');
               // DialogBuilder(context).showResultDialog('Invalid Credentials963!');
               await Future.delayed(const Duration(seconds: 2));
             }
-
           }
-
-        }else{
+        } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: const Text('Email ID and Password cannot be empty'),
           ));
@@ -188,14 +173,13 @@ class _LoginPageState extends State<LoginPage> {
                   blurRadius: 5,
                   spreadRadius: 2)
             ],
-            gradient: const  LinearGradient(
+            gradient: const LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
                   Colors.deepPurpleAccent,
                   Colors.deepPurple,
-                ]
-            )),
+                ])),
         child: Text(
           'Login',
           style: TextStyle(fontSize: 20, color: Colors.white),
@@ -203,6 +187,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
   Widget _divider() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
@@ -236,38 +221,36 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
   Widget _createAccountLabel() {
-    return  Container(
-        margin: EdgeInsets.symmetric(vertical: 20),
-        padding: EdgeInsets.all(15),
-        alignment: Alignment.bottomCenter,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Don\'t have an account ?',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-      InkWell(
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => SignUp()));
-        },
-        child: Text(
-              'Register',
-              style: TextStyle(
-                  color: primaryColor,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600),
-            )),
-          ],
-        ),
-      );
-
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 20),
+      padding: EdgeInsets.all(15),
+      alignment: Alignment.bottomCenter,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Don\'t have an account ?',
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          InkWell(
+              onTap: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => SignUp()));
+              },
+              child: Text(
+                'Register',
+                style: TextStyle(
+                    color: primaryColor,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600),
+              )),
+        ],
+      ),
+    );
   }
 
   Widget _title() {
@@ -280,18 +263,17 @@ class _LoginPageState extends State<LoginPage> {
             fontSize: 30,
             fontWeight: FontWeight.w700,
             color: primaryColor,
-          ),  children: [
-        TextSpan(
-          text: 'ork',
-          style: TextStyle(color: Colors.black, fontSize: 30),
-        ),
-        TextSpan(
-          text: 'lytics',
-          style: TextStyle(
-              color: primaryColor,
-              fontSize: 30),
-        ),
-      ]),
+          ),
+          children: [
+            TextSpan(
+              text: 'ork',
+              style: TextStyle(color: Colors.black, fontSize: 30),
+            ),
+            TextSpan(
+              text: 'lytics',
+              style: TextStyle(color: primaryColor, fontSize: 30),
+            ),
+          ]),
     );
   }
 
@@ -299,8 +281,7 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       children: <Widget>[
         _entryField("Email id", emailController),
-
-        _entryField("Password",passwordController),
+        _entryField("Password", passwordController),
       ],
     );
   }
@@ -310,37 +291,37 @@ class _LoginPageState extends State<LoginPage> {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
         body: Container(
-          height: height,
-          child: Stack(
-            children: <Widget>[
-              Positioned(
-                  top: -height * .15,
-                  right: -MediaQuery.of(context).size.width * .4,
-                  child: BezierContainer()),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: height * .2),
-                      _title(),
-                      SizedBox(height: 50),
-                      _emailPasswordWidget(),
-                      SizedBox(height: 20),
-                      _submitButton(),
+      height: height,
+      child: Stack(
+        children: <Widget>[
+          Positioned(
+              top: -height * .15,
+              right: -MediaQuery.of(context).size.width * .4,
+              child: BezierContainer()),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(height: height * .2),
+                  _title(),
+                  SizedBox(height: 50),
+                  _emailPasswordWidget(),
+                  SizedBox(height: 20),
+                  _submitButton(),
 
-                      _divider(),
-                      // _facebookButton(),
-                      SizedBox(height: height * .055),
-                      _createAccountLabel(),
-                    ],
-                  ),
-                ),
+                  _divider(),
+                  // _facebookButton(),
+                  SizedBox(height: height * .055),
+                  _createAccountLabel(),
+                ],
               ),
-            ],
+            ),
           ),
-        ));
+        ],
+      ),
+    ));
   }
 }

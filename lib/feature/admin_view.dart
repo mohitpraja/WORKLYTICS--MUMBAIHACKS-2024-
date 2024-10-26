@@ -164,7 +164,7 @@ class _AdminViewState extends State<AdminView> {
       // Floating Action Button for Adding Employee
       floatingActionButton: FloatingActionButton(
         onPressed: _addEmployee,
-        child: Icon(Icons.add_task,color: primaryColor,),
+        child: Icon(Icons.person_add,color: primaryColor,),
       ),
     );
   }
