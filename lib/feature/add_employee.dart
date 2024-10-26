@@ -102,6 +102,10 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
                     "password": 'abcd1234',
                     "ownerId": phone,
                     "owner": 'no',
+                    "isWorking": 'no',
+                    "geofenceSts": 'within',
+                    "action": '0',
+
                   });
 
 
